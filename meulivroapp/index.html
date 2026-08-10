@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PoemCenter</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="tela-biblioteca" id="tela-biblioteca">
+  <header class="biblioteca-header">
+    <img src="logo.png" alt="PoemCenter" class="biblioteca-logo">
+    <h1>PoemCenter</h1>
+    <p>todas as suas autorias, reunidas aqui</p>
+  </header>
+  <div class="estante" id="estante"></div>
+</div>
+
+<div class="app escondido" id="tela-livro">
+
+  <aside class="sidebar">
+
+    <div class="sidebar-marca">
+      <img src="logo.png" alt="PoemCenter" class="sidebar-logo">
+      <span>PoemCenter</span>
+    </div>
+
+    <button id="btn-voltar-biblioteca" class="link-voltar">← Biblioteca</button>
+
+    <header class="livro-header">
+      <h1 class="livro-titulo" id="livro-titulo-sidebar">Título<br>do livro</h1>
+      <p class="livro-subtitulo">manuscrito pessoal &middot; pré-lançamento</p>
+    </header>
+
+    <div class="sidebar-stats" id="sidebar-stats">
+      <div class="stat">
+        <span class="stat-num" id="stat-partes">0</span>
+        <span class="stat-label">partes</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" id="stat-poemas">0</span>
+        <span class="stat-label">poemas</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" id="stat-palavras">0</span>
+        <span class="stat-label">palavras</span>
+      </div>
+    </div>
+
+    <nav class="lista-wrap">
+
+      <div class="item-nav" data-tipo="capa" tabindex="0">
+        <span class="item-nav-icone">❧</span> Capa
+      </div>
+      <div class="item-nav" data-tipo="sumario" tabindex="0">
+        <span class="item-nav-icone">‖</span> Sumário
+      </div>
+
+      <div class="secao-titulo">Partes do livro</div>
+      <div id="partes-wrap"></div>
+
+      <div class="item-nav" data-tipo="notafinal" tabindex="0">
+        <span class="item-nav-icone">❧</span> Nota final
+      </div>
+      <div class="item-nav" data-tipo="sobreautor" tabindex="0">
+        <span class="item-nav-icone">❧</span> Sobre o autor
+      </div>
+
+    </nav>
+
+    <div class="sidebar-actions">
+      <button id="btn-nova-parte" class="btn-secundario">+ Nova parte</button>
+      <button id="btn-preview-livro" class="btn-secundario">Prévia p/ exportar PDF</button>
+      <button id="btn-exportar-tudo" class="btn-primario">Exportar manuscrito (.txt)</button>
+    </div>
+
+  </aside>
+
+  <main class="editor">
+
+    <section class="painel painel-capa" id="painel-capa">
+      <div class="pagina-capa">
+        <span class="cesura-grande">❧</span>
+        <input type="text" id="capa-titulo" class="capa-titulo-input" placeholder="Título do livro">
+        <input type="text" id="capa-subtitulo" class="capa-subtitulo-input" placeholder="Subtítulo (opcional)">
+        <input type="text" id="capa-autor" class="capa-autor-input" placeholder="Nome do autor ou autora">
+        <input type="text" id="capa-epiteto" class="capa-epiteto-input" placeholder="Conhecido(a) como... (opcional)">
+        <textarea id="capa-dedicatoria" class="capa-dedicatoria-input" placeholder="Dedicatória (opcional) — ex: para quem me ensinou o silêncio..." rows="2"></textarea>
+      </div>
+    </section>
+
+    <section class="painel painel-sumario" id="painel-sumario">
+      <div class="sumario-topo">
+        <h2>Sumário</h2>
+        <p class="sumario-dica">Clique em qualquer item para ir direto até ele.</p>
+      </div>
+      <div class="sumario-conteudo" id="sumario-conteudo"></div>
+    </section>
+
+    <section class="painel painel-poema" id="painel-poema">
+
+      <div class="estado-vazio" id="estado-vazio">
+        <span class="cesura">‖</span>
+        <p>Nenhum poema selecionado.<br>Crie uma parte e comece a escrever.</p>
+      </div>
+
+      <div class="editor-conteudo" id="editor-conteudo">
+        <div class="editor-top">
+          <span class="editor-parte-label" id="editor-parte-label"></span>
+          <input type="text" id="titulo-capitulo" placeholder="Título do poema" autocomplete="off">
+          <div class="editor-meta">
+            <span class="respiro" id="respiro" title="status de salvamento"></span>
+            <span id="status-salvamento">tudo salvo</span>
+            <span class="separador-meta">&middot;</span>
+            <span id="contador-palavras">0 palavras</span>
+          </div>
+        </div>
+
+        <textarea id="texto-capitulo" placeholder="Comece a escrever aqui..." spellcheck="true"></textarea>
+
+        <div class="editor-bottom">
+          <button id="btn-excluir" class="btn-perigo">Excluir poema</button>
+          <div class="editor-bottom-direita">
+            <button id="btn-exportar-poema" class="btn-secundario">Exportar este poema</button>
+            <button id="btn-salvar" class="btn-primario">Salvar</button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="painel painel-notafinal" id="painel-notafinal">
+      <div class="editor-top">
+        <h2>Nota final</h2>
+        <div class="editor-meta">
+          <span class="respiro" id="respiro-nota"></span>
+          <span id="status-salvamento-nota">tudo salvo</span>
+        </div>
+      </div>
+      <textarea id="texto-nota-final" placeholder="Umas últimas palavras para quem chegou até aqui..." spellcheck="true"></textarea>
+    </section>
+
+    <section class="painel painel-sobreautor" id="painel-sobreautor">
+      <div class="editor-top">
+        <h2>Sobre o autor</h2>
+        <div class="editor-meta">
+          <span class="respiro" id="respiro-bio"></span>
+          <span id="status-salvamento-bio">tudo salvo</span>
+        </div>
+      </div>
+      <textarea id="texto-biografia" placeholder="Conte um pouco sobre você para quem está lendo..." spellcheck="true"></textarea>
+    </section>
+
+  </main>
+
+</div>
+
+<script type="module" src="script.js"></script>
+</body>
+</html>
