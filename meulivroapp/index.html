@@ -15,8 +15,21 @@
   <header class="biblioteca-header">
     <img src="logo.png" alt="PoemCenter" class="biblioteca-logo">
     <h1>PoemCenter</h1>
-    <p>todas as suas autorias, reunidas aqui</p>
+    <p>“Escrevo porque descobri que algumas partes de mim só sabem existir em palavras.”</p>
+
+    <select id="select-tema-estante" class="btn-tema" style="cursor: pointer; padding: 6px 8px; margin-top: 14px;">
+      <option value="noite">❧ Noite de Veludo</option>
+      <option value="livro">❧ Papel Envelhecido</option>
+      <option value="floresta">❧ Floresta Silenciosa</option>
+      <option value="nevoa">❧ Névoa da Manhã</option>
+      <option value="crepusculo">❧ Crepúsculo Vinho</option>
+      <option value="azul">❧ Azul Marinho Real</option>
+      <option value="cobre">❧ Deserto de Cobre</option>
+      <option value="sol">❧ Sol da Meia-Noite</option>
+      <option value="infinito">❧ Caos Infinito 🌌</option>
+    </select>
   </header>
+  
   <div class="estante" id="estante"></div>
 </div>
 
@@ -27,6 +40,18 @@
     <div class="sidebar-marca">
       <img src="logo.png" alt="PoemCenter" class="sidebar-logo">
       <span>PoemCenter</span>
+
+      <select id="select-tema-sidebar" class="btn-tema" style="padding: 2px 4px; font-size: 11px; cursor: pointer; max-width: 90px; margin-left: auto;">
+        <option value="noite">Noite</option>
+        <option value="livro">Papel</option>
+        <option value="floresta">Floresta</option>
+        <option value="nevoa">Névoa</option>
+        <option value="crepusculo">Vinho</option>
+        <option value="azul">Azul</option>
+        <option value="cobre">Cobre</option>
+        <option value="sol">Sol</option>
+        <option value="infinito">Infinito</option>
+      </select>
     </div>
 
     <button id="btn-voltar-biblioteca" class="link-voltar">← Biblioteca</button>

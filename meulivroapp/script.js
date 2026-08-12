@@ -98,7 +98,6 @@ onAuthStateChanged(auth, (user) => {
 
 
 function controlarInterfaceEdicao() {
-
   const cardNovo = document.querySelector(".livro-card.novo");
   if (cardNovo) cardNovo.style.display = isAutor ? "flex" : "none";
 
@@ -132,7 +131,9 @@ function controlarInterfaceEdicao() {
 function configurarPortaSecreta() {
   const logos = [
     document.querySelector(".biblioteca-logo"),
-    document.querySelector(".sidebar-logo")
+    document.querySelector(".sidebar-logo"),
+    document.querySelector(".biblioteca-header h1"),
+    document.querySelector(".sidebar-marca span")
   ];
 
   logos.forEach(logo => {
@@ -913,7 +914,6 @@ function renderizarEstante() {
   cardNovo.addEventListener("click", criarNovoLivro);
   estanteEl.appendChild(cardNovo);
 
-  // CORREÇÃO: Força o site a se auto-bloquear se você não estiver logado
   controlarInterfaceEdicao();
 }
 
@@ -934,3 +934,68 @@ function criarNovoLivro() {
 }
 
 inicializarApp();
+
+function inicializarControleTema() {
+  const selectEstante = document.getElementById("select-tema-estante");
+  const selectSidebar = document.getElementById("select-tema-sidebar");
+  const temas = ["noite", "livro", "floresta", "nevoa", "crepusculo", "azul", "cobre", "sol", "infinito"];
+  let temaAtual = "noite";
+
+  const temaSalvo = localStorage.getItem("tema-preferido") || "noite";
+  temaAtual = temaSalvo;
+  if (!temas.includes(temaAtual)) temaAtual = "noite";
+  aplicarTema(temaAtual);
+
+  function gerarTemaInfinito() {
+    const tom = Math.floor(Math.random() * 360); 
+    document.body.style.setProperty("--cor-fundo-app", `hsl(${tom}, 18%, 10%)`);
+    document.body.style.setProperty("--cor-fundo-sidebar", `hsl(${tom}, 18%, 7%)`);
+    document.body.style.setProperty("--cor-fundo-editor", `hsl(${tom}, 18%, 13%)`);
+    document.body.style.setProperty("--cor-texto", `hsl(${tom}, 12%, 91%)`);
+    document.body.style.setProperty("--cor-texto-suave", `hsl(${tom}, 12%, 72%)`);
+    document.body.style.setProperty("--cor-texto-fraco", `hsl(${tom}, 10%, 50%)`);
+    document.body.style.setProperty("--cor-linha", `hsl(${tom}, 18%, 18%)`);
+    document.body.style.setProperty("--cor-vinho-forte", `hsl(${(tom + 180) % 360}, 45%, 55%)`);
+    document.body.style.setProperty("--cor-acento-forte", `hsl(${(tom + 45) % 360}, 50%, 65%)`);
+  }
+
+  function aplicarTema(nomeTema) {
+
+    document.body.removeAttribute("style");
+    document.body.classList.remove("tema-livro", "tema-floresta", "tema-nevoa", "tema-crepusculo", "tema-azul", "tema-cobre", "tema-sol");
+    
+    if (nomeTema === "livro") document.body.classList.add("tema-livro");
+    if (nomeTema === "floresta") document.body.classList.add("tema-floresta");
+    if (nomeTema === "nevoa") document.body.classList.add("tema-nevoa");
+    if (nomeTema === "crepusculo") document.body.classList.add("tema-crepusculo");
+    if (nomeTema === "azul") document.body.classList.add("tema-azul");
+    if (nomeTema === "cobre") document.body.classList.add("tema-cobre");
+    if (nomeTema === "sol") document.body.classList.add("tema-sol");
+    if (nomeTema === "infinito") gerarTemaInfinito();
+    
+    if (selectEstante) selectEstante.value = nomeTema;
+    if (selectSidebar) selectSidebar.value = nomeTema;
+  }
+
+  function mudarTemaSelecionado(event) {
+    const novoTema = event.target.value;
+    temaAtual = novoTema;
+    aplicarTema(novoTema);
+    localStorage.setItem("tema-preferido", novoTema);
+  }
+
+  if (selectEstante) {
+    selectEstante.addEventListener("change", mudarTemaSelecionado);
+    selectEstante.addEventListener("click", () => {
+      if (selectEstante.value === "infinito") gerarTemaInfinito();
+    });
+  }
+  if (selectSidebar) {
+    selectSidebar.addEventListener("change", mudarTemaSelecionado);
+    selectSidebar.addEventListener("click", () => {
+      if (selectSidebar.value === "infinito") gerarTemaInfinito();
+    });
+  }
+}
+
+inicializarControleTema();
