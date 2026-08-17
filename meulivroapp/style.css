@@ -901,3 +901,96 @@ body.tema-livro .livro-card {
 body.tema-livro .livro-card:hover {
   border-left-color: var(--cor-vinho-forte) !important;
 }
+
+.tela-jukebox .livro-card:not(.novo) {
+  background-color: #1e1622 !important;
+  border: 1px dashed rgba(194, 154, 90, 0.25) !important; 
+  border-left: 2px solid var(--cor-acento) !important;
+  transform: rotate(-1.5deg); 
+  border-radius: 4px !important;
+  box-shadow: 2px 8px 24px rgba(0, 0, 0, 0.25) !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.tela-jukebox .livro-card:not(.novo):hover {
+  transform: rotate(0deg) translateY(-4px) scale(1.01) !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35) !important;
+}
+
+body.tema-livro .tela-jukebox .livro-card:not(.novo) {
+  background-color: #faf6eb !important;
+  border: 1px dashed rgba(133, 114, 106, 0.3) !important;
+  border-left: 2px solid var(--cor-vinho-forte) !important;
+  transform: rotate(-2deg);
+  border-radius: 4px !important;
+  box-shadow: 2px 8px 20px rgba(36, 28, 25, 0.04) !important;
+}
+
+.vela-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  height: 70px;
+  margin-bottom: 10px;
+}
+
+.corpo-vela {
+  width: 18px;
+  height: 45px;
+  background: linear-gradient(to bottom, #eae1d4, #bfa88f);
+  border-radius: 4px;
+  box-shadow: inset 2px 0 5px rgba(255,255,255,0.2), 0 4px 8px rgba(0,0,0,0.1);
+}
+
+body.tema-livro .corpo-vela {
+  background: linear-gradient(to bottom, #d2c4b1, #8e7a68);
+}
+
+.chama {
+  width: 10px;
+  height: 22px;
+  background: linear-gradient(to top, #ff4500, #ff8c00, #ffd700, #ffffea);
+  border-radius: 50% 50% 35% 35% / 60% 60% 40% 40%;
+  box-shadow: 0 0 15px #ff8c00, 0 0 25px #ffd700;
+  animation: tremular 1.2s ease-in-out infinite alternate;
+  transform-origin: bottom center;
+}
+
+@keyframes tremular {
+  0% {
+    transform: scaleX(1) scaleY(1) rotate(-1deg);
+    box-shadow: 0 0 12px #ff8c00, 0 0 20px #ffd700;
+  }
+  50% {
+    transform: scaleX(0.95) scaleY(1.05) rotate(1deg);
+    box-shadow: 0 0 15px #ff8c00, 0 0 25px #ffd700;
+  }
+  100% {
+    transform: scaleX(1.05) scaleY(0.95) rotate(-0.5deg);
+    box-shadow: 0 0 10px #ff8c00, 0 0 18px #ffd700;
+  }
+}
+
+.tela-jukebox .livro-card:not(.novo) {
+  background-color: #1e1622 !important;
+  border: 1px dashed rgba(194, 154, 90, 0.25) !important; 
+  border-left: 3px solid var(--cor-acento) !important;
+  transform: rotate(-1.5deg); 
+  border-radius: 4px !important;
+  box-shadow: 2px 8px 24px rgba(0, 0, 0, 0.25) !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.tela-jukebox .livro-card:not(.novo):hover {
+  transform: rotate(0deg) translateY(-4px) scale(1.01) !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35) !important;
+}
+
+body.tema-livro .tela-jukebox .livro-card:not(.novo) {
+  background-color: #faf6eb !important;
+  border: 1px dashed rgba(133, 114, 106, 0.3) !important;
+  border-left: 3px solid var(--cor-vinho-forte) !important;
+  transform: rotate(-2deg);
+  box-shadow: 2px 8px 20px rgba(36, 28, 25, 0.04) !important;
+}

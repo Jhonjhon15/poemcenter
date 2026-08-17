@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -16,18 +17,23 @@
     <img src="logo.png" alt="PoemCenter" class="biblioteca-logo">
     <h1>PoemCenter</h1>
     <p>“Escrevo porque descobri que algumas partes de mim só sabem existir em palavras.”</p>
+  
+    <div style="display: flex; gap: 10px; margin-top: 18px; justify-content: center; align-items: center; flex-wrap: wrap;">
+ 
+      <select id="select-tema-estante" class="btn-tema" style="cursor: pointer; padding: 6px 8px;">
+        <option value="noite">❧ Noite de Veludo</option>
+        <option value="livro">❧ Papel Envelhecido</option>
+        <option value="floresta">❧ Floresta Silenciosa</option>
+        <option value="nevoa">❧ Névoa da Manhã</option>
+        <option value="crepusculo">❧ Crepúsculo Vinho</option>
+        <option value="azul">❧ Azul Marinho Real</option>
+        <option value="cobre">❧ Deserto de Cobre</option>
+        <option value="sol">❧ Sol da Meia-Noite</option>
+        <option value="infinito">❧ Caos Infinito 🌌</option>
+      </select>
 
-    <select id="select-tema-estante" class="btn-tema" style="cursor: pointer; padding: 6px 8px; margin-top: 14px;">
-      <option value="noite">❧ Noite de Veludo</option>
-      <option value="livro">❧ Papel Envelhecido</option>
-      <option value="floresta">❧ Floresta Silenciosa</option>
-      <option value="nevoa">❧ Névoa da Manhã</option>
-      <option value="crepusculo">❧ Crepúsculo Vinho</option>
-      <option value="azul">❧ Azul Marinho Real</option>
-      <option value="cobre">❧ Deserto de Cobre</option>
-      <option value="sol">❧ Sol da Meia-Noite</option>
-      <option value="infinito">❧ Caos Infinito 🌌</option>
-    </select>
+      <a href="atmosfera.html" class="btn-tema" style="text-decoration: none;">❧ Ouvir Trilha Sonora</a>
+    </div>
   </header>
   
   <div class="estante" id="estante"></div>
@@ -184,6 +190,7 @@
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script type="module" src="script.js"></script>
 </body>
 </html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PoemCenter — Atmosfera Poética</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+
+  .tela-jukebox {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+    text-align: center;
+    background: radial-gradient(circle at 50% 35%, #1e1522 0%, #171219 75%);
+  }
+  body.tema-livro .tela-jukebox {
+    background: radial-gradient(circle at 50% 35%, #faf5e8 0%, #f4edd9 75%) !important;
+  }
+  .vinil-wrap {
+    position: relative;
+    width: 220px;
+    height: 220px;
+    margin-bottom: 30px;
+  }
+
+  .disco-vinil {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: radial-gradient(circle, #2d2626 40%, #111 41%, #111 46%, #000 47%);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 10px rgba(255,255,255,0.05);
+    border: 4px solid #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.4s ease;
+  }
+ 
+  .centro-vinil {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: var(--cor-acento-forte);
+    border: 2px solid #2d2626;
+    background-image: radial-gradient(circle, #2d2626 20%, transparent 25%);
+  }
+
+  .girando {
+    animation: girarVinil 12s linear infinite;
+  }
+  @keyframes girarVinil {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+@media (min-width: 769px) {
+  .menu-abas { 
+    display: none !important; 
+  }
+  #coluna-trilha, #coluna-pensamentos { 
+    display: flex !important; 
+  }
+}
+</style>
+</head>
+<body>
+
+ <div class="tela-jukebox">
+
+  <a href="index.html" class="link-voltar" style="text-decoration: none; margin-bottom: 30px; align-self: flex-start;">← Voltar para a Biblioteca</a>
+
+  <div class="menu-abas" style="display: flex; gap: 20px; margin-bottom: 30px; justify-content: center; width: 100%;">
+    <button class="aba-btn ativa" data-aba="coluna-trilha" style="background: none; border: none; font-family: var(--font-display); font-style: italic; font-size: 20px; color: var(--cor-acento-forte); cursor: pointer; border-bottom: 2px solid var(--cor-acento-forte); padding-bottom: 5px;">❧ Sintonizar Trilha</button>
+    <button class="aba-btn" data-aba="coluna-pensamentos" style="background: none; border: none; font-family: var(--font-display); font-style: italic; font-size: 20px; color: var(--cor-texto-suave); cursor: pointer; padding-bottom: 5px;">📜 Pensamentos Diários</button>
+  </div>
+
+  <div style="display: flex; gap: 40px; align-items: flex-start; justify-content: center; flex-wrap: wrap; width: 100%; max-width: 1000px;">
+
+    <div id="coluna-trilha" class="coluna-aba" style="flex: 1; min-width: 280px; display: flex; flex-direction: column; align-items: center; gap: 20px;">
+      <div class="vela-container">
+        <div class="chama"></div>
+        <div class="corpo-vela"></div>
+      </div>
+
+      <div class="vinil-wrap">
+        <div class="disco-vinil" id="disco-vinil">
+          <div class="centro-vinil"></div>
+        </div>
+      </div>
+
+      <header class="biblioteca-header" style="margin-bottom: 0;">
+        <h1 style="font-size: 28px; margin-bottom: 8px;">Atmosfera Poética</h1>
+        <p>“A música é o perfume da poesia.”</p>
+      </header>
+
+      <div style="display: flex; gap: 10px; align-items: center; margin-top: 10px;">
+        <button id="btn-play-jukebox" class="btn-tema" style="padding: 8px 16px;">🔇 Ligar Som</button>
+        <select id="select-jukebox" class="btn-tema" style="cursor: pointer; padding: 8px 12px;">
+          <option value="piano">❧ Piano Clássico</option>
+          <option value="lofi">❧ Lo-Fi Chuva</option>
+          <option value="bossa">❧ Bossa Nova</option>
+          <option value="violao">❧ Violão Acústico</option>
+        </select>
+      </div>
+
+      <div id="acessibilidade-leitor" style="display: flex; gap: 10px; margin-top: 10px; justify-content: center;">
+        <button onclick="mudarFonte(1)" class="btn-tema" style="padding: 6px 12px; font-weight: bold;">A+</button>
+        <button onclick="mudarFonte(-1)" class="btn-tema" style="padding: 6px 12px; font-weight: bold;">A-</button>
+      </div>
+    </div>
+
+    <div id="coluna-pensamentos" class="coluna-aba" style="flex: 1; min-width: 280px; display: none; flex-direction: column; gap: 20px; align-items: center;">
+      <h2 style="font-family: var(--font-display); font-style: italic; font-size: 26px; color: var(--cor-acento-forte);">❧ Pensamentos Diários</h2>
+      <div class="estante" id="mural-posts" style="display: flex; flex-direction: column; gap: 16px; width: 100%;"></div>
+    </div>
+
+  </div>
+</div>
+
+<audio id="audio-jukebox" loop src="https://figuringoutmelody.com/wp-content/uploads/adore-you-piano.mp3"></audio>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+  import { getFirestore, collection, doc, setDoc, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBBmBlIpTyTQDPVaYP28hpmWJ1Mg-rmfvE",
+    authDomain: "poemcenter-e8321.firebaseapp.com",
+    projectId: "poemcenter-e8321",
+    storageBucket: "poemcenter-e8321.firebasestorage.app",
+    messagingSenderId: "688212162542",
+    appId: "1:688212162542:web:5a0258f989172e6b7980ff",
+    measurementId: "G-Y0YJ3MVY4Y"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+
+  let isAutor = false;
+  const AUTOR_UID = "HHW3idVJCLV2SQmpYv7Hu4C8ibD2";
+  onAuthStateChanged(auth, (user) => {
+    isAutor = (user && user.uid === AUTOR_UID);
+    carregarMural();
+  });
+
+  async function carregarMural() {
+    const muralEl = document.getElementById("mural-posts");
+    if (!muralEl) return;
+    muralEl.innerHTML = "";
+    try {
+      const querySnapshot = await getDocs(collection(db, "pensamentos"));
+      querySnapshot.forEach((docSnap) => {
+        const post = docSnap.data();
+        const card = document.createElement("div");
+        card.className = "livro-card";
+        card.innerHTML = `<span class="card-cesura">‖</span><h3>“${post.texto}”</h3><div class="card-meta"><span>♫ ${post.musica.toUpperCase()}</span></div>`;
+        muralEl.appendChild(card);
+      });
+    } catch (erro) {
+      console.error(erro);
+    }
+    if (isAutor) {
+      const cardNovo = document.createElement("div");
+      cardNovo.className = "livro-card novo";
+      cardNovo.innerHTML = `<span class="card-cesura">+</span><span>Novo pensamento</span>`;
+      cardNovo.addEventListener("click", criarNovaPostagem);
+      muralEl.appendChild(cardNovo);
+    }
+  }
+
+  async function criarNovaPostagem() {
+    const texto = prompt("Digite o seu pensamento poético de hoje:");
+    if (!texto) return;
+    const musica = prompt("Qual estilo de música acoplar? (piano, lofi, bossa, violao):", "piano");
+    try {
+      const idPost = String(Date.now());
+      await setDoc(doc(db, "pensamentos", idPost), {
+        texto: texto.trim(),
+        musica: (musica || "piano").trim().toLowerCase(),
+        createdAt: new Date()
+      });
+      alert("Pensamento publicado na nuvem!");
+      carregarMural();
+    } catch (erro) {
+      console.error(erro);
+    }
+  }
+
+  window.mudarFonte = function(direcao) {
+
+    const pensamentos = document.querySelectorAll("#mural-posts h3");
+    
+    pensamentos.forEach(p => {
+      const tamanhoAtual = parseFloat(window.getComputedStyle(p).fontSize);
+      p.style.fontSize = (tamanhoAtual + direcao) + "px";
+    });
+  };
+
+  const selectJukebox = document.getElementById("select-jukebox");
+  const btnPlay = document.getElementById("btn-play-jukebox");
+  const disco = document.getElementById("disco-vinil");
+  const audio = document.getElementById("audio-jukebox");
+  const chama = document.querySelector(".chama");
+  let tocando = false;
+  let intervalVolume = null;
+
+  const playlist = [
+    { id: "piano", url: "https://figuringoutmelody.com/wp-content/uploads/adore-you-piano.mp3" },
+    { id: "lofi", url: "musicas/lofi.mp3" },
+    { id: "bossa", url: "musicas/bossa.mp3" },
+    { id: "violao", url: "musicas/violao.mp3" }
+  ];
+
+  function ajustarVolumeSuave(volumeAlvo, callback) {
+    clearInterval(intervalVolume);
+    const passo = 0.05;
+    intervalVolume = setInterval(() => {
+      if (audio.volume < volumeAlvo) {
+        audio.volume = Math.min(audio.volume + passo, volumeAlvo);
+      } else if (audio.volume > volumeAlvo) {
+        audio.volume = Math.max(audio.volume - passo, volumeAlvo);
+      }
+      if (audio.volume === volumeAlvo) {
+        clearInterval(intervalVolume);
+        if (callback) callback();
+      }
+    }, 80);
+  }
+
+  function alternarSom() {
+    if (tocando) {
+      ajustarVolumeSuave(0, () => {
+        audio.pause();
+        btnPlay.textContent = "🔇 Ligar Som";
+        disco.classList.remove("girando");
+        if (chama) chama.style.animation = "tremular 1.2s infinite alternate";
+      });
+      tocando = false;
+    } else {
+      const idMusica = selectJukebox.value;
+      const track = playlist.find(m => m.id === idMusica);
+      if (track) {
+        audio.src = track.url;
+        audio.volume = 0;
+        audio.play().then(() => {
+          ajustarVolumeSuave(0.35);
+          btnPlay.textContent = "🔊 Pausar Som";
+          disco.classList.add("girando");
+          if (chama) chama.style.animation = "tremular 0.4s infinite alternate"; 
+          tocando = true;
+        }).catch(e => console.log(e));
+      }
+    }
+  }
+
+  function mudarTrilha(event) {
+    const idMusica = event.target.value;
+    const track = playlist.find(m => m.id === idMusica);
+    if (track && tocando) {
+      ajustarVolumeSuave(0, () => {
+        audio.src = track.url;
+        audio.play().then(() => ajustarVolumeSuave(0.35));
+      });
+    }
+  }
+
+  btnPlay.addEventListener("click", alternarSom);
+  selectJukebox.addEventListener("change", mudarTrilha);
+
+  const botoesAbas = document.querySelectorAll(".aba-btn");
+  const colunas = document.querySelectorAll(".coluna-aba");
+
+  botoesAbas.forEach(botao => {
+    botao.addEventListener("click", () => {
+      if (window.innerWidth > 768) return;
+      botoesAbas.forEach(b => {
+        b.classList.remove("ativa");
+        b.style.borderBottom = "none";
+        b.style.color = "var(--cor-texto-suave)";
+      });
+      botao.classList.add("ativa");
+      botao.style.borderBottom = "2px solid var(--cor-acento-forte)";
+      botao.style.color = "var(--cor-acento-forte)";
+      const abaAlvo = botao.dataset.aba;
+      colunas.forEach(coluna => {
+        if (coluna.id === abaAlvo) {
+          coluna.style.display = "flex";
+        } else {
+          coluna.style.display = "none";
+        }
+      });
+    });
+  });
+</script>

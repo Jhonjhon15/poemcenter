@@ -1,24 +1,10 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
-import { getFirestore, collection, doc, setDoc, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+const SUPABASE_URL = "https://brjwpghnpgbkuexhpsyj.supabase.co"; 
+const SUPABASE_ANON_KEY = "sb_publishable_7ZujRiFKXUW1vby5uQwGlA_I7pzESGp"; 
+const AUTOR_UID = "jhon-dev"; 
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBBmBlIpTyTQDPVaYP28hpmWJ1Mg-rmfvE",
-  authDomain: "poemcenter-e8321.firebaseapp.com",
-  projectId: "poemcenter-e8321",
-  storageBucket: "poemcenter-e8321.firebasestorage.app",
-  messagingSenderId: "688212162542",
-  appId: "1:688212162542:web:5a0258f989172e6b7980ff",
-  measurementId: "G-Y0YJ3MVY4Y"
-};
-
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let isAutor = false;
-const AUTOR_UID = "HHW3idVJCLV2SQmpYv7Hu4C8ibD2";
 
 const CHAVE_STORAGE_BIBLIOTECA = "biblioteca-de-livros";
 const CHAVE_STORAGE_ANTIGA = "entre-versos-e-silencios-livro";
@@ -79,23 +65,23 @@ const btnNovaParte = document.getElementById("btn-nova-parte");
 const btnExportarTudo = document.getElementById("btn-exportar-tudo");
 const btnPreviewLivro = document.getElementById("btn-preview-livro");
 
-onAuthStateChanged(auth, (user) => {
-  if (user && user.uid === AUTOR_UID) {
+supabaseClient.auth.onAuthStateChange((event, session) => {
+  const user = session?.user;
+  if (user && user.id === AUTOR_UID) {
     isAutor = true;
-    console.log("🔑 Olá, Jhonatan! Modo Autor ATIVADO.");
+    console.log("🔑 Modo Autor ATIVADO.");
   } else {
     isAutor = false;
-    console.log("📖 Modo Leitor ATIVADO. Modo de apenas leitura.");
+    console.log("📖 Modo Leitor ATIVADO. Apenas leitura.");
   }
 
   controlarInterfaceEdicao();
   renderizarEstante();
-  
+
   if (livro) {
     renderizarTudo();
   }
 });
-
 
 function controlarInterfaceEdicao() {
   const cardNovo = document.querySelector(".livro-card.novo");
@@ -114,7 +100,7 @@ function controlarInterfaceEdicao() {
     capaTitulo, capaSubtitulo, capaAutor, capaEpiteto, capaDedicatoria,
     inputTitulo, textareaTexto, textoNotaFinal, textoBiografia
   ];
-  
+
   inputsEscrita.forEach(input => {
     if (input) {
       if (isAutor) {
@@ -139,13 +125,12 @@ function configurarPortaSecreta() {
   logos.forEach(logo => {
     if (logo) {
       logo.style.cursor = "pointer";
-      logo.addEventListener("dblclick", () => {
+      logo.addEventListener("dblclick", async () => {
         if (isAutor) {
           if (confirm("Você já está logado como Autor. Deseja sair (fazer logout)?")) {
-            signOut(auth).then(() => {
-              alert("Você saiu do modo Autor. O site agora está no modo de Leitura Pública.");
-              location.reload();
-            });
+            await supabaseClient.auth.signOut();
+            alert("Você saiu do modo Autor. O site agora está no modo de Leitura Pública.");
+            location.reload();
           }
         } else {
           const email = prompt("E-mail do Autor:");
@@ -153,14 +138,17 @@ function configurarPortaSecreta() {
           const senha = prompt("Senha do Autor:");
           if (!senha) return;
 
-          signInWithEmailAndPassword(auth, email, senha)
-            .then(() => {
-              alert("Acesso autorizado! Bem-vindo de volta, Jhonatan.");
-            })
-            .catch((erro) => {
-              alert("Credenciais incorretas ou erro de conexão.");
-              console.error(erro);
-            });
+          const { error } = await supabaseClient.auth.signInWithPassword({
+            email,
+            password: senha
+          });
+
+          if (error) {
+            alert("Credenciais incorretas ou erro de conexão.");
+            console.error(error);
+          } else {
+            alert("Acesso autorizado!");
+          }
         }
       });
     }
@@ -169,34 +157,33 @@ function configurarPortaSecreta() {
 
 async function inicializarApp() {
   try {
-    console.log("Conectando ao Firestore...");
-    const querySnapshot = await getDocs(collection(db, "books"));
-    biblioteca = [];
-    
-    querySnapshot.forEach((docSnap) => {
-      biblioteca.push(normalizarLivro(docSnap.data()));
-    });
+    console.log("Conectando ao Supabase...");
+    const { data, error } = await supabaseClient.from("books").select("*");
+
+    if (error) throw error;
+
+    biblioteca = (data || []).map(normalizarLivro);
 
     if (biblioteca.length === 0) {
-      console.log("Banco na nuvem vazio. Verificando dados locais para migração...");
+      console.log("Banco na nuvem vazio. Verificando dados locais...");
       const dadosLocais = localStorage.getItem(CHAVE_STORAGE_BIBLIOTECA) || localStorage.getItem(CHAVE_STORAGE_ANTIGA);
       if (dadosLocais) {
-        console.log("Encontrados dados no localStorage! Iniciando migração automática...");
+        console.log("Encontrados dados no localStorage! Migrando...");
         const bibliotecaLocal = JSON.parse(dadosLocais);
         const listaLivros = Array.isArray(bibliotecaLocal) ? bibliotecaLocal : [bibliotecaLocal];
-        
+
         for (let l of listaLivros) {
           const livroNorm = normalizarLivro(l);
-          await setDoc(doc(db, "books", String(livroNorm.id)), livroNorm);
+          await supabaseClient.from("books").upsert({ id: String(livroNorm.id), ...livroNorm });
           biblioteca.push(livroNorm);
         }
-        console.log("Migração concluída com sucesso!");
+        console.log("Migração concluída!");
       }
     } else {
-      console.log("Livros carregados com sucesso diretamente da nuvem Firestore!");
+      console.log("Livros carregados do Supabase com sucesso!");
     }
   } catch (erro) {
-    console.error("Erro ao conectar ou carregar dados do Firestore. Usando cache local de segurança...", erro);
+    console.error("Erro ao conectar ao Supabase. Usando cache local...", erro);
     const dadosBackup = localStorage.getItem(CHAVE_STORAGE_BIBLIOTECA);
     if (dadosBackup) {
       biblioteca = JSON.parse(dadosBackup).map(normalizarLivro);
@@ -205,26 +192,27 @@ async function inicializarApp() {
 
   mostrarTelaBiblioteca();
   renderizarEstante();
-  configurarPortaSecreta(); 
+  configurarPortaSecreta();
 }
 
 async function salvarNoStorage() {
-  if (!isAutor) return; 
-  
+  if (!isAutor) return;
+
   localStorage.setItem(CHAVE_STORAGE_BIBLIOTECA, JSON.stringify(biblioteca));
-  
+
   if (livro) {
     try {
-      await setDoc(doc(db, "books", String(livro.id)), livro);
-      console.log(`Sincronizado na nuvem: Livro "${livro.capa.titulo || "Sem título"}" atualizado.`);
+      const { error } = await supabaseClient.from("books").upsert({ id: String(livro.id), ...livro });
+      if (error) throw error;
+      console.log(`Livro "${livro.capa.titulo || "Sem título"}" sincronizado.`);
     } catch (erro) {
-      console.error("Erro ao enviar atualizações para a nuvem:", erro);
+      console.error("Erro ao sincronizar com o Supabase:", erro);
     }
   }
 }
 
 async function excluirLivro(id) {
-  if (!isAutor) return; 
+  if (!isAutor) return;
 
   const l = biblioteca.find((x) => x.id === id);
   if (!l) return;
@@ -233,14 +221,15 @@ async function excluirLivro(id) {
   if (!confirm(aviso)) return;
 
   biblioteca = biblioteca.filter((x) => x.id !== id);
-  
+
   try {
-    await deleteDoc(doc(db, "books", String(id)));
-    console.log("Livro excluído com sucesso da nuvem Firestore!");
+    const { error } = await supabaseClient.from("books").delete().eq("id", String(id));
+    if (error) throw error;
+    console.log("Livro excluído do Supabase!");
   } catch (erro) {
-    console.error("Erro ao excluir livro da nuvem:", erro);
+    console.error("Erro ao excluir do Supabase:", erro);
   }
-  
+
   localStorage.setItem(CHAVE_STORAGE_BIBLIOTECA, JSON.stringify(biblioteca));
   renderizarEstante();
 }
@@ -703,7 +692,7 @@ btnExportarTudo.addEventListener("click", () => {
   livro.partes.forEach((parte, i) => {
     if (parte.poemas.length === 0) return;
     sumarioTexto += `\nParte ${NOME_ROMANOS[i] || i + 1} — ${parte.titulo}\n`;
-    parte.poemas.forEach((p) => { sumarioTexto += `   ‖ ${p.titulo || "Sem título"}\n`; });
+    parte.poemas.forEach((p) => { sumarioTexto += `    ‖ ${p.titulo || "Sem título"}\n`; });
   });
   partes.push(sumarioTexto);
 
@@ -933,8 +922,6 @@ function criarNovoLivro() {
   abrirLivro(novo.id);
 }
 
-inicializarApp();
-
 function inicializarControleTema() {
   const selectEstante = document.getElementById("select-tema-estante");
   const selectSidebar = document.getElementById("select-tema-sidebar");
@@ -960,10 +947,9 @@ function inicializarControleTema() {
   }
 
   function aplicarTema(nomeTema) {
-
     document.body.removeAttribute("style");
     document.body.classList.remove("tema-livro", "tema-floresta", "tema-nevoa", "tema-crepusculo", "tema-azul", "tema-cobre", "tema-sol");
-    
+
     if (nomeTema === "livro") document.body.classList.add("tema-livro");
     if (nomeTema === "floresta") document.body.classList.add("tema-floresta");
     if (nomeTema === "nevoa") document.body.classList.add("tema-nevoa");
@@ -972,7 +958,7 @@ function inicializarControleTema() {
     if (nomeTema === "cobre") document.body.classList.add("tema-cobre");
     if (nomeTema === "sol") document.body.classList.add("tema-sol");
     if (nomeTema === "infinito") gerarTemaInfinito();
-    
+
     if (selectEstante) selectEstante.value = nomeTema;
     if (selectSidebar) selectSidebar.value = nomeTema;
   }
@@ -998,4 +984,5 @@ function inicializarControleTema() {
   }
 }
 
+inicializarApp();
 inicializarControleTema();
