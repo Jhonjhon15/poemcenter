@@ -988,9 +988,9 @@ inicializarApp();
 inicializarControleTema();
 
 async function sincronizarLivrosDaNuvem() {
-    const { data, error } = await supabaseClient
-        .from('books') 
-        .select('*');
+   const { data, error } = await supabaseClient
+    .from('books')
+    .select('*');
 
     if (error) {
         console.error("Erro ao carregar do Supabase:", error.message);
