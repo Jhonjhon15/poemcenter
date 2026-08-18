@@ -986,3 +986,26 @@ function inicializarControleTema() {
 
 inicializarApp();
 inicializarControleTema();
+
+async function sincronizarLivrosDaNuvem() {
+    const { data, error } = await supabaseClient
+        .from('books') 
+        .select('*');
+
+    if (error) {
+        console.error("Erro ao carregar do Supabase:", error.message);
+        return;
+    }
+
+    if (data && data.length > 0) {
+        localStorage.setItem("biblioteca-de-livros", JSON.stringify(data));
+ 
+        if (typeof renderizarEstante === 'function') {
+            renderizarEstante();
+        } else {
+            location.reload();
+        }
+    }
+}
+
+sincronizarLivrosDaNuvem();

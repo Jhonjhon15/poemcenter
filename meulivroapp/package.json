@@ -1,6 +1,12 @@
 {
+  "scripts": {
+    "dev": "live-server"
+  },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",
     "@supabase/supabase-js": "^2.112.3"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
   }
 }
