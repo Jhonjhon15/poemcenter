@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PoemCenter - Editor</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="shortcut icon" href="favicon.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+
+    .btn-hamburguer-flutuante {
+        position: fixed !important;
+        top: 20px !important;
+        left: 20px !important;
+        z-index: 2147483647 !important; 
+        background: var(--card-bg, #1a1a1e) !important;
+        border: 1px solid var(--border-color, rgba(212, 175, 55, 0.4)) !important;
+        color: var(--accent-gold, #d4af37) !important;
+        font-size: 20px !important;
+        width: 42px !important;
+        height: 42px !important;
+        border-radius: 8px !important;
+        cursor: pointer !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        padding: 0 !important;
+        transition: opacity 0.25s ease, visibility 0.25s ease, transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .btn-hamburguer-flutuante:hover {
+        transform: scale(1.05);
+        border-color: #d4af37 !important;
+    }
+
+    .menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(3px);
+        z-index: 2147483645;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .menu-overlay.ativo {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .menu-gaveta {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 300px;
+        height: 100vh;
+        background-color: var(--cor-fundo-sidebar, #141417);
+        color: #e0e0e0;
+        box-shadow: 5px 0 25px rgba(0, 0, 0, 0.7);
+        z-index: 2147483646;
+        transform: translateX(-100%);
+        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+    }
+    .menu-gaveta.ativo {
+        transform: translateX(0);
+    }
+
+    .menu-cabecalho {
+        padding: 22px 25px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        border-bottom: 1px solid rgba(212, 175, 55, 0.2) !important;
+        background-color: transparent !important;
+    }
+
+    .menu-titulo-interno {
+        font-family: 'Cormorant Garamond', serif !important;
+        font-size: 18px !important;
+        color: #d4af37 !important;
+        letter-spacing: 1.5px !important;
+        font-weight: 600 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .btn-fechar-menu {
+        background: transparent !important;
+        border: none !important;
+        color: #d4af37 !important;
+        font-size: 26px !important;
+        cursor: pointer !important;
+        padding: 0 !important;
+        line-height: 1 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        transition: transform 0.2s ease;
+    }
+    .btn-fechar-menu:hover {
+        transform: scale(1.1);
+    }
+
+    .menu-nav-conteudo {
+        padding: 15px 20px;
+        overflow-y: auto;
+        flex-grow: 1;
+    }
+    .menu-nav-conteudo .secao-titulo {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #888;
+        margin-top: 18px;
+        margin-bottom: 8px;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        padding-bottom: 4px;
+    }
+    
+    .item-nav {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 10px;
+        color: #ccc;
+        text-decoration: none;
+        font-size: 14px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.2s, color 0.2s;
+        margin-bottom: 2px;
+    }
+    .item-nav:hover {
+        background: rgba(212, 175, 55, 0.1);
+        color: #d4af37;
+    }
+    .item-nav-icone {
+        color: #d4af37;
+    }
+
+    .submenu-temas {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-in-out;
+        padding-left: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    .submenu-temas.ativo {
+        max-height: 350px;
+        margin-top: 6px;
+        margin-bottom: 6px;
+    }
+    .subitem-tema {
+        font-size: 13px;
+        color: #aaa;
+        padding: 5px 8px;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: color 0.2s, background 0.2s;
+    }
+    .subitem-tema:hover {
+        color: #d4af37;
+        background: rgba(212, 175, 55, 0.05);
+    }
+
+    .tela-inicio { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; padding: 20px; }
+    .tela-biblioteca { display: none; padding: 40px 20px; }
+    .app.escondido { display: none; }
+    .escondido { display: none !important; }
+  </style>
+</head>
+<body>
+
+<!-- Botão Flutuante do Menu Principal (Fora da gaveta) -->
+<button id="btnMenu" class="btn-hamburguer-flutuante" title="Menu Poêmico">☰</button>
+
+<!-- Overlay de Fundo Escuro -->
+<div id="menuOverlay" class="menu-overlay"></div>
+
+<!-- Gaveta Lateral -->
+<aside id="menuGaveta" class="menu-gaveta">
+    <div class="menu-cabecalho">
+        <span class="menu-titulo-interno">MENU POÊMICO</span>
+        <button id="btnFecharMenu" class="btn-fechar-menu">&times;</button>
+    </div>
+
+    <nav class="menu-nav-conteudo">
+        <div class="secao-titulo">Navegação Principal</div>
+        <div class="item-nav" data-acao="inicio"><span class="item-nav-icone">🏠</span> Início</div>
+        
+        <div class="item-nav" id="btnToggleEstante" style="justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span class="item-nav-icone">📚</span> Estante Poética
+            </div>
+            <span id="setaEstante" style="font-size: 12px; color: #888; transition: transform 0.3s;">▼</span>
+        </div>
+        
+        <div class="submenu-temas" id="submenuEstante">
+            <a class="subitem-tema" data-acao="biblioteca">❧ Minha Biblioteca (Meus Livros)</a>
+            <a class="subitem-tema" data-acao="favoritos">❧ Favoritos</a>
+        </div>
+
+        <div class="item-nav" data-acao="atmosfera"><span class="item-nav-icone">🎧</span> Atmosfera Poética</div>
+        <div class="item-nav" data-acao="pensamentos"><span class="item-nav-icone">✍️</span> Pensamentos</div>
+
+        <div class="secao-titulo">Personalização & Temas</div>
+        <div class="item-nav" id="btnToggleTemas" style="justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span class="item-nav-icone">🎨</span> Seletor de Temas
+            </div>
+            <span id="setaTema" style="font-size: 12px; color: #888; transition: transform 0.3s;">▼</span>
+        </div>
+        
+        <div class="submenu-temas" id="submenuTemas">
+            <span class="subitem-tema" data-tema="noite">❧ Noite de Veludo</span>
+            <span class="subitem-tema" data-tema="livro">❧ Papel Envelhecido</span>
+            <span class="subitem-tema" data-tema="floresta">❧ Floresta Silenciosa</span>
+            <span class="subitem-tema" data-tema="nevoa">❧ Névoa da Manhã</span>
+            <span class="subitem-tema" data-tema="crepusculo">❧ Crepúsculo Vinho</span>
+            <span class="subitem-tema" data-tema="azul">❧ Azul Marinho Real</span>
+            <span class="subitem-tema" data-tema="cobre">❧ Deserto de Cobre</span>
+            <span class="subitem-tema" data-tema="sol">❧ Sol da Meia-Noite</span>
+            <span class="subitem-tema" data-tema="infinito">❧ Caos Infinito 🌌</span>
+        </div>
+
+        <div class="secao-titulo">Acessibilidade & Ajustes</div>
+        <div class="item-nav" data-acao="fonte"><span class="item-nav-icone">🔠</span> Estilo de Fontes (A+ / A-)</div>
+        <div class="item-nav" data-acao="zen"><span class="item-nav-icone">🌙</span> Modo Zen</div>
+        <div class="item-nav" data-acao="vela"><span class="item-nav-icone">🕯️</span> Vela Virtual</div>
+
+        <div class="secao-titulo">Comunidade & Sobre</div>
+        <div class="item-nav" data-acao="autor"><span class="item-nav-icone">👤</span> Sobre o Autor</div>
+        <div class="item-nav" data-acao="manifesto"><span class="item-nav-icone">📜</span> Manifesto</div>
+    </nav>
+
+    <div style="padding: 15px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; gap: 8px;">
+      <button id="btn-nova-parte" class="btn-secundario" style="width: 100%; padding: 8px; cursor: pointer;">+ Nova parte</button>
+      <button id="btn-preview-livro" class="btn-secundario" style="width: 100%; padding: 8px; cursor: pointer;">Prévia p/ exportar PDF</button>
+      <button id="btn-exportar-tudo" class="btn-primario" style="width: 100%; padding: 8px; cursor: pointer;">Exportar manuscrito (.txt)</button>
+    </div>
+</aside>
+
+<div class="tela-inicio" id="tela-inicio">
+    <img src="logo.png" alt="PoemCenter" style="width: 70px; height: 70px; margin-bottom: 20px; object-fit: contain;">
+    <h1 style="font-family: 'Cormorant Garamond', serif; font-size: 38px; color: #d4af37; margin-bottom: 12px; letter-spacing: 1px;">PoemCenter</h1>
+    <p style="color: #aaa; font-style: italic; font-family: 'Cormorant Garamond', serif; font-size: 16px; max-width: 500px; letter-spacing: 0.5px;">“Escrevo porque descobri que algumas partes de mim só sabem existir em palavras.”</p>
+</div>
+
+<div class="tela-biblioteca" id="tela-biblioteca">
+  <header class="biblioteca-header" style="text-align: center; margin-bottom: 30px;">
+    <h2 style="font-family: 'Cormorant Garamond', serif; color: #d4af37; font-size: 28px;">Estante Poética</h2>
+    <p style="color: #888; font-size: 14px;">Seus livros e manuscritos salvos.</p>
+  </header>
+  
+  <div class="estante" id="estante" style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;"></div>
+</div>
+
+<div class="app escondido" id="tela-livro">
+  <main class="editor">
+    
+  </main>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const gaveta = document.getElementById("menuGaveta");
+        const overlay = document.getElementById("menuOverlay");
+        const btnAbrir = document.getElementById("btnMenu");
+        const btnFechar = document.getElementById("btnFecharMenu");
+
+        const telaInicio = document.getElementById("tela-inicio");
+        const telaBiblioteca = document.getElementById("tela-biblioteca");
+        const telaLivro = document.getElementById("tela-livro");
+
+        function abrirMenu(e) {
+            if (e) e.preventDefault();
+            if (gaveta) gaveta.classList.add("ativo");
+            if (overlay) overlay.classList.add("ativo");
+            if (btnAbrir) {
+                btnAbrir.style.opacity = "0";
+                btnAbrir.style.visibility = "hidden";
+            }
+        }
+
+        function fecharMenu(e) {
+            if (e) e.preventDefault();
+            if (gaveta) gaveta.classList.remove("ativo");
+            if (overlay) overlay.classList.remove("ativo");
+            if (btnAbrir) {
+                btnAbrir.style.opacity = "1";
+                btnAbrir.style.visibility = "visible";
+            }
+        }
+
+        if (btnAbrir) btnAbrir.addEventListener("click", abrirMenu);
+        if (btnFechar) btnFechar.addEventListener("click", fecharMenu);
+        if (overlay) overlay.addEventListener("click", fecharMenu);
+
+        const btnToggleTemas = document.getElementById("btnToggleTemas");
+        const submenuTemas = document.getElementById("submenuTemas");
+        const setaTema = document.getElementById("setaTema");
+
+        if (btnToggleTemas) {
+            btnToggleTemas.addEventListener("click", () => {
+                submenuTemas.classList.toggle("ativo");
+                setaTema.style.transform = submenuTemas.classList.contains("ativo") ? "rotate(180deg)" : "rotate(0deg)";
+            });
+        }
+
+        const btnToggleEstante = document.getElementById("btnToggleEstante");
+        const submenuEstante = document.getElementById("submenuEstante");
+        const setaEstante = document.getElementById("setaEstante");
+
+        if (btnToggleEstante) {
+            btnToggleEstante.addEventListener("click", () => {
+                submenuEstante.classList.toggle("ativo");
+                setaEstante.style.transform = submenuEstante.classList.contains("ativo") ? "rotate(180deg)" : "rotate(0deg)";
+            });
+        }
+
+        document.querySelectorAll('[data-acao]').forEach(item => {
+            item.addEventListener('click', () => {
+                const acao = item.getAttribute('data-acao');
+                if (!acao) return;
+                fecharMenu();
+                
+                if (acao === 'atmosfera') {
+                    window.location.href = 'atmosfera.html';
+                } else if (acao === 'inicio') {
+                    if (telaLivro) telaLivro.classList.add('escondido');
+                    if (telaBiblioteca) telaBiblioteca.style.display = 'none';
+                    if (telaInicio) telaInicio.style.display = 'flex';
+                } else if (acao === 'biblioteca' || acao === 'favoritos') {
+                    if (telaInicio) telaInicio.style.display = 'none';
+                    if (telaLivro) telaLivro.classList.add('escondido');
+                    if (telaBiblioteca) telaBiblioteca.style.display = 'block';
+                }
+            });
+        });
+    });
+</script>
+<script type="module" src="script.js"></script>
+</body>
+</html>

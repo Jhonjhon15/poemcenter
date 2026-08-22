@@ -1,196 +1,323 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PoemCenter</title>
-<link rel="icon" type="image/png" href="favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar no Santuário | PoemCenter</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="shortcut icon" href="favicon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #0b0b0e;
+            font-family: 'Cormorant Garamond', serif;
+            color: #d4af37;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(white 1px, transparent 0);
+            background-size: 50px 50px;
+            opacity: 0.05;
+            z-index: 0;
+        }
+
+        .container-login-geral {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .ornamento-lateral {
+            font-size: 32px;
+            color: #d4af37;
+            opacity: 0.7;
+            font-family: 'Cormorant Garamond', serif;
+            user-select: none;
+        }
+
+        .login-card {
+            background-color: #f3eee3;
+            border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+            padding: 45px 45px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 40px rgba(185, 160, 120, 0.2);
+            width: 420px;
+            text-align: center;
+            border: 1px solid rgba(197, 181, 155, 0.6);
+            box-sizing: border-box;
+        }
+
+        .logo-topo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .logo-topo-img {
+            width: 38px;
+            height: 38px;
+            object-fit: contain;
+            margin-bottom: 6px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+        }
+
+        .marca-topo {
+            font-size: 13px;
+            letter-spacing: 3px;
+            color: #665c48;
+            text-transform: uppercase;
+            font-family: 'Inter', sans-serif;
+        }
+
+        h1 { 
+            font-weight: 500; 
+            margin-bottom: 25px; 
+            color: #1a1a1e; 
+            font-size: 26px;
+            font-style: italic;
+        }
+
+        .input-grupo {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px 0;
+            border: none;
+            border-bottom: 1px solid #c5b59b;
+            background: transparent;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            color: #2c2c2c;
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-bottom-color: #1a1a1e;
+        }
+
+        input::placeholder {
+            color: #8c7f6b;
+        }
+
+        .checkbox-grupo {
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            color: #665c48;
+            margin-top: -5px;
+            margin-bottom: 18px;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .checkbox-grupo input {
+            width: auto;
+            cursor: pointer;
+        }
+
+        .opcoes-extras {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            margin-top: 10px;
+            margin-bottom: 22px;
+        }
+
+        .opcoes-extras a {
+            color: #665c48;
+            text-decoration: none;
+            transition: color 0.2s;
+            cursor: pointer;
+        }
+
+        .opcoes-extras a:hover {
+            color: #1a1a1e;
+            text-decoration: underline;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #1a1a1e 0%, #2a2a30 100%);
+            color: #d4af37;
+            border: 1px solid #d4af37;
+            cursor: pointer;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 19px;
+            letter-spacing: 1.5px;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
+            transition: all 0.3s ease;
+        }
+
+        .btn-login:hover {
+            background: linear-gradient(135deg, #2a2a30 100%, #1a1a1e 0%);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .link-voltar-login {
+            display: block;
+            margin-top: 20px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            color: #665c48;
+            text-decoration: none;
+        }
+        .link-voltar-login:hover { color: #1a1a1e; text-decoration: underline; }
+
+        .opcao-recuperacao {
+            background: rgba(26, 26, 30, 0.05);
+            border: 1px solid #c5b59b;
+            padding: 12px;
+            margin-bottom: 10px;
+            text-align: left;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            color: #333;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .opcao-recuperacao:hover {
+            background: rgba(26, 26, 30, 0.1);
+        }
+
+        .escondido { display: none; }
+    </style>
 </head>
 <body>
 
-<div class="tela-biblioteca" id="tela-biblioteca">
-  <header class="biblioteca-header">
-    <img src="logo.png" alt="PoemCenter" class="biblioteca-logo">
-    <h1>PoemCenter</h1>
-    <p>“Escrevo porque descobri que algumas partes de mim só sabem existir em palavras.”</p>
-  
-    <div style="display: flex; gap: 10px; margin-top: 18px; justify-content: center; align-items: center; flex-wrap: wrap;">
- 
-      <select id="select-tema-estante" class="btn-tema" style="cursor: pointer; padding: 6px 8px;">
-        <option value="noite">❧ Noite de Veludo</option>
-        <option value="livro">❧ Papel Envelhecido</option>
-        <option value="floresta">❧ Floresta Silenciosa</option>
-        <option value="nevoa">❧ Névoa da Manhã</option>
-        <option value="crepusculo">❧ Crepúsculo Vinho</option>
-        <option value="azul">❧ Azul Marinho Real</option>
-        <option value="cobre">❧ Deserto de Cobre</option>
-        <option value="sol">❧ Sol da Meia-Noite</option>
-        <option value="infinito">❧ Caos Infinito 🌌</option>
-      </select>
+<div class="container-login-geral">
 
-      <a href="atmosfera.html" class="btn-tema" style="text-decoration: none;">❧ Ouvir Trilha Sonora</a>
+    <div class="ornamento-lateral">❧</div>
+
+    <div class="login-card">
+
+        <div id-tela="login" class="tela-auth">
+            <div class="logo-topo-container">
+                <img src="logo.png" alt="PoemCenter" class="logo-topo-img">
+                <div class="marca-topo">PoemCenter</div>
+            </div>
+            <h1>Entrar no Santuário</h1>
+            
+            <div class="input-grupo">
+                <input type="text" id="email-login" placeholder="E-mail ou telefone" autocomplete="off">
+            </div>
+            
+            <div class="input-grupo">
+                <input type="password" id="senha-login" placeholder="Senha">
+            </div>
+
+            <div class="checkbox-grupo">
+                <input type="checkbox" id="mostrar-senha" onclick="alternarVisibilidadeSenha()">
+                <label for="mostrar-senha">Mostrar senha</label>
+            </div>
+            
+            <div class="opcoes-extras">
+                <a onclick="mudarTela('recuperar')">Esqueceu a senha?</a>
+                <a onclick="mudarTela('cadastro')">Não tem conta? Cadastre-se</a>
+            </div>
+
+            <button class="btn-login" onclick="fazerLogin()">Entrar</button>
+        </div>
+
+        <div id-tela="cadastro" class="tela-auth escondido">
+            <div class="logo-topo-container">
+                <img src="logo.png" alt="PoemCenter" class="logo-topo-img">
+                <div class="marca-topo">PoemCenter</div>
+            </div>
+            <h1>Criar Novo Registro</h1>
+            
+            <div class="input-grupo">
+                <input type="text" placeholder="Seu nome ou pseudônimo">
+            </div>
+            <div class="input-grupo">
+                <input type="text" placeholder="E-mail ou telefone">
+            </div>
+            <div class="input-grupo">
+                <input type="password" placeholder="Crie uma senha secreta">
+            </div>
+
+            <button class="btn-login" onclick="fazerCadastro()">Registrar no Santuário</button>
+            <a class="link-voltar-login" onclick="mudarTela('login')">← Voltar para o login</a>
+        </div>
+
+        <div id-tela="recuperar" class="tela-auth escondido">
+            <div class="logo-topo-container">
+                <img src="logo.png" alt="PoemCenter" class="logo-topo-img">
+                <div class="marca-topo">PoemCenter</div>
+            </div>
+            <h1 style="font-size: 22px;">Recuperação de Conta</h1>
+            <p style="font-family: 'Inter', sans-serif; font-size: 13px; color: #665c48; margin-bottom: 20px; text-align: left;">
+                Escolha como deseja recuperar o acesso ao seu santuário:
+            </p>
+
+            <div class="opcao-recuperacao" onclick="alert('Instruções enviadas para o seu e-mail de recuperação.')">
+                ✉️ Receber código de verificação por e-mail
+            </div>
+            <div class="opcao-recuperacao" onclick="alert('Verificação por SMS enviada para seu telefone.')">
+                📱 Receber código por SMS (Telefone)
+            </div>
+            <div class="opcao-recuperacao" onclick="alert('Entre em contato com o suporte técnico do PoemCenter.')">
+                ❓ Tente outra maneira de recuperação
+            </div>
+
+            <a class="link-voltar-login" onclick="mudarTela('login')">← Voltar para o login</a>
+        </div>
+
     </div>
-  </header>
-  
-  <div class="estante" id="estante"></div>
+
+    <div class="ornamento-lateral" style="font-family: monospace; letter-spacing: -2px;">‖</div>
 </div>
 
-<div class="app escondido" id="tela-livro">
+<script>
+    function mudarTela(nomeTela) {
+        document.querySelectorAll('.tela-auth').forEach(tela => {
+            tela.classList.add('escondido');
+        });
+        document.querySelector(`[id-tela="${nomeTela}"]`).classList.remove('escondido');
+    }
 
-  <aside class="sidebar">
+    function alternarVisibilidadeSenha() {
+        const inputSenha = document.getElementById('senha-login');
+        if (inputSenha.type === 'password') {
+            inputSenha.type = 'text';
+        } else {
+            inputSenha.type = 'password';
+        }
+    }
 
-    <div class="sidebar-marca">
-      <img src="logo.png" alt="PoemCenter" class="sidebar-logo">
-      <span>PoemCenter</span>
+    function fazerLogin() {
+        window.location.href = "editor.html";
+    }
 
-      <select id="select-tema-sidebar" class="btn-tema" style="padding: 2px 4px; font-size: 11px; cursor: pointer; max-width: 90px; margin-left: auto;">
-        <option value="noite">Noite</option>
-        <option value="livro">Papel</option>
-        <option value="floresta">Floresta</option>
-        <option value="nevoa">Névoa</option>
-        <option value="crepusculo">Vinho</option>
-        <option value="azul">Azul</option>
-        <option value="cobre">Cobre</option>
-        <option value="sol">Sol</option>
-        <option value="infinito">Infinito</option>
-      </select>
-    </div>
+    function fazerCadastro() {
+        alert("Conta criada com sucesso! Entrando...");
+        window.location.href = "editor.html";
+    }
+</script>
 
-    <button id="btn-voltar-biblioteca" class="link-voltar">← Biblioteca</button>
-
-    <header class="livro-header">
-      <h1 class="livro-titulo" id="livro-titulo-sidebar">Título<br>do livro</h1>
-      <p class="livro-subtitulo">manuscrito pessoal &middot; pré-lançamento</p>
-    </header>
-
-    <div class="sidebar-stats" id="sidebar-stats">
-      <div class="stat">
-        <span class="stat-num" id="stat-partes">0</span>
-        <span class="stat-label">partes</span>
-      </div>
-      <div class="stat">
-        <span class="stat-num" id="stat-poemas">0</span>
-        <span class="stat-label">poemas</span>
-      </div>
-      <div class="stat">
-        <span class="stat-num" id="stat-palavras">0</span>
-        <span class="stat-label">palavras</span>
-      </div>
-    </div>
-
-    <nav class="lista-wrap">
-
-      <div class="item-nav" data-tipo="capa" tabindex="0">
-        <span class="item-nav-icone">❧</span> Capa
-      </div>
-      <div class="item-nav" data-tipo="sumario" tabindex="0">
-        <span class="item-nav-icone">‖</span> Sumário
-      </div>
-
-      <div class="secao-titulo">Partes do livro</div>
-      <div id="partes-wrap"></div>
-
-      <div class="item-nav" data-tipo="notafinal" tabindex="0">
-        <span class="item-nav-icone">❧</span> Nota final
-      </div>
-      <div class="item-nav" data-tipo="sobreautor" tabindex="0">
-        <span class="item-nav-icone">❧</span> Sobre o autor
-      </div>
-
-    </nav>
-
-    <div class="sidebar-actions">
-      <button id="btn-nova-parte" class="btn-secundario">+ Nova parte</button>
-      <button id="btn-preview-livro" class="btn-secundario">Prévia p/ exportar PDF</button>
-      <button id="btn-exportar-tudo" class="btn-primario">Exportar manuscrito (.txt)</button>
-    </div>
-
-  </aside>
-
-  <main class="editor">
-
-    <section class="painel painel-capa" id="painel-capa">
-      <div class="pagina-capa">
-        <span class="cesura-grande">❧</span>
-        <input type="text" id="capa-titulo" class="capa-titulo-input" placeholder="Título do livro">
-        <input type="text" id="capa-subtitulo" class="capa-subtitulo-input" placeholder="Subtítulo (opcional)">
-        <input type="text" id="capa-autor" class="capa-autor-input" placeholder="Nome do autor ou autora">
-        <input type="text" id="capa-epiteto" class="capa-epiteto-input" placeholder="Conhecido(a) como... (opcional)">
-        <textarea id="capa-dedicatoria" class="capa-dedicatoria-input" placeholder="Dedicatória (opcional) — ex: para quem me ensinou o silêncio..." rows="2"></textarea>
-      </div>
-    </section>
-
-    <section class="painel painel-sumario" id="painel-sumario">
-      <div class="sumario-topo">
-        <h2>Sumário</h2>
-        <p class="sumario-dica">Clique em qualquer item para ir direto até ele.</p>
-      </div>
-      <div class="sumario-conteudo" id="sumario-conteudo"></div>
-    </section>
-
-    <section class="painel painel-poema" id="painel-poema">
-
-      <div class="estado-vazio" id="estado-vazio">
-        <span class="cesura">‖</span>
-        <p>Nenhum poema selecionado.<br>Crie uma parte e comece a escrever.</p>
-      </div>
-
-      <div class="editor-conteudo" id="editor-conteudo">
-        <div class="editor-top">
-          <span class="editor-parte-label" id="editor-parte-label"></span>
-          <input type="text" id="titulo-capitulo" placeholder="Título do poema" autocomplete="off">
-          <div class="editor-meta">
-            <span class="respiro" id="respiro" title="status de salvamento"></span>
-            <span id="status-salvamento">tudo salvo</span>
-            <span class="separador-meta">&middot;</span>
-            <span id="contador-palavras">0 palavras</span>
-          </div>
-        </div>
-
-        <textarea id="texto-capitulo" placeholder="Comece a escrever aqui..." spellcheck="true"></textarea>
-
-        <div class="editor-bottom">
-          <button id="btn-excluir" class="btn-perigo">Excluir poema</button>
-          <div class="editor-bottom-direita">
-            <button id="btn-exportar-poema" class="btn-secundario">Exportar este poema</button>
-            <button id="btn-salvar" class="btn-primario">Salvar</button>
-          </div>
-        </div>
-      </div>
-
-    </section>
-
-    <section class="painel painel-notafinal" id="painel-notafinal">
-      <div class="editor-top">
-        <h2>Nota final</h2>
-        <div class="editor-meta">
-          <span class="respiro" id="respiro-nota"></span>
-          <span id="status-salvamento-nota">tudo salvo</span>
-        </div>
-      </div>
-      <textarea id="texto-nota-final" placeholder="Umas últimas palavras para quem chegou até aqui..." spellcheck="true"></textarea>
-    </section>
-
-    <section class="painel painel-sobreautor" id="painel-sobreautor">
-      <div class="editor-top">
-        <h2>Sobre o autor</h2>
-        <div class="editor-meta">
-          <span class="respiro" id="respiro-bio"></span>
-          <span id="status-salvamento-bio">tudo salvo</span>
-        </div>
-      </div>
-      <textarea id="texto-biografia" placeholder="Conte um pouco sobre você para quem está lendo..." spellcheck="true"></textarea>
-    </section>
-
-  </main>
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script type="module" src="script.js"></script>
 </body>
 </html>

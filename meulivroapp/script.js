@@ -115,44 +115,38 @@ function controlarInterfaceEdicao() {
 }
 
 function configurarPortaSecreta() {
-  const logos = [
-    document.querySelector(".biblioteca-logo"),
-    document.querySelector(".sidebar-logo"),
-    document.querySelector(".biblioteca-header h1"),
-    document.querySelector(".sidebar-marca span")
-  ];
+  const logo = document.querySelector(".biblioteca-logo");
 
-  logos.forEach(logo => {
-    if (logo) {
-      logo.style.cursor = "pointer";
-      logo.addEventListener("dblclick", async () => {
-        if (isAutor) {
-          if (confirm("Você já está logado como Autor. Deseja sair (fazer logout)?")) {
-            await supabaseClient.auth.signOut();
-            alert("Você saiu do modo Autor. O site agora está no modo de Leitura Pública.");
-            location.reload();
-          }
-        } else {
-          const email = prompt("E-mail do Autor:");
-          if (!email) return;
-          const senha = prompt("Senha do Autor:");
-          if (!senha) return;
-
-          const { error } = await supabaseClient.auth.signInWithPassword({
-            email,
-            password: senha
-          });
-
-          if (error) {
-            alert("Credenciais incorretas ou erro de conexão.");
-            console.error(error);
-          } else {
-            alert("Acesso autorizado!");
-          }
+  if (logo) {
+    logo.style.cursor = "pointer";
+    logo.addEventListener("dblclick", async () => {
+      if (isAutor) {
+        if (confirm("Você já está logado como Autor. Deseja sair (fazer logout)?")) {
+          await supabaseClient.auth.signOut();
+          alert("Você saiu do modo Autor. O site agora está no modo de Leitura Pública.");
+          location.reload();
         }
-      });
-    }
-  });
+      } else {
+        const email = prompt("E-mail do Autor:");
+        if (!email) return;
+        const senha = prompt("Senha do Autor:");
+        if (!senha) return;
+
+        const { error } = await supabaseClient.auth.signInWithPassword({
+          email,
+          password: senha
+        });
+
+        if (error) {
+          alert("Credenciais incorretas ou erro de conexão.");
+          console.error(error);
+        } else {
+          alert("Acesso autorizado!");
+          location.reload();
+        }
+      }
+    });
+  }
 }
 
 async function inicializarApp() {
@@ -190,7 +184,7 @@ async function inicializarApp() {
     }
   }
 
-  mostrarTelaBiblioteca();
+  if (telaBiblioteca) mostrarTelaBiblioteca();
   renderizarEstante();
   configurarPortaSecreta();
 }
@@ -308,9 +302,11 @@ function irPara(tipo, parteId = null, poemaId = null) {
 }
 
 function mostrarPainel(tipo) {
-  [painelCapa, painelSumario, painelPoema, painelNotaFinal, painelSobreAutor].forEach((p) => p.classList.remove("visivel"));
+  [painelCapa, painelSumario, painelPoema, painelNotaFinal, painelSobreAutor].forEach((p) => {
+    if (p) p.classList.remove("visivel");
+  });
   const mapa = { capa: painelCapa, sumario: painelSumario, poema: painelPoema, notafinal: painelNotaFinal, sobreautor: painelSobreAutor };
-  mapa[tipo].classList.add("visivel");
+  if (mapa[tipo]) mapa[tipo].classList.add("visivel");
 }
 
 function renderizarNavTopo() {
@@ -320,6 +316,7 @@ function renderizarNavTopo() {
 }
 
 function renderizarPartes() {
+  if (!partesWrap) return;
   partesWrap.innerHTML = "";
 
   livro.partes.forEach((parte, index) => {
@@ -399,32 +396,36 @@ function renderizarPartes() {
     partesWrap.appendChild(bloco);
   });
 
-  statPartes.textContent = livro.partes.length;
-  statPoemas.textContent = todosOsPoemas().length;
-  statPalavras.textContent = totalDePalavras();
+  if (statPartes) statPartes.textContent = livro.partes.length;
+  if (statPoemas) statPoemas.textContent = todosOsPoemas().length;
+  if (statPalavras) statPalavras.textContent = totalDePalavras();
 }
 
 function renderizarCapa() {
-  capaTitulo.value = livro.capa.titulo;
-  capaSubtitulo.value = livro.capa.subtitulo;
-  capaAutor.value = livro.capa.autor;
-  capaEpiteto.value = livro.capa.epiteto;
-  capaDedicatoria.value = livro.capa.dedicatoria;
+  if (capaTitulo) capaTitulo.value = livro.capa.titulo;
+  if (capaSubtitulo) capaSubtitulo.value = livro.capa.subtitulo;
+  if (capaAutor) capaAutor.value = livro.capa.autor;
+  if (capaEpiteto) capaEpiteto.value = livro.capa.epiteto;
+  if (capaDedicatoria) capaDedicatoria.value = livro.capa.dedicatoria;
 }
 
-[capaTitulo, capaSubtitulo, capaAutor, capaEpiteto, capaDedicatoria].forEach((el) => {
-  el.addEventListener("input", () => {
-    if (!isAutor) return;
-    livro.capa.titulo = capaTitulo.value;
-    livro.capa.subtitulo = capaSubtitulo.value;
-    livro.capa.autor = capaAutor.value;
-    livro.capa.epiteto = capaEpiteto.value;
-    livro.capa.dedicatoria = capaDedicatoria.value;
-    salvarNoStorage();
-  });
+const camposCapa = [capaTitulo, capaSubtitulo, capaAutor, capaEpiteto, capaDedicatoria];
+camposCapa.forEach((el) => {
+    if (el) {
+        el.addEventListener("input", () => {
+            if (!isAutor) return;
+            if (capaTitulo) livro.capa.titulo = capaTitulo.value;
+            if (capaSubtitulo) livro.capa.subtitulo = capaSubtitulo.value;
+            if (capaAutor) livro.capa.autor = capaAutor.value;
+            if (capaEpiteto) livro.capa.epiteto = capaEpiteto.value;
+            if (capaDedicatoria) livro.capa.dedicatoria = capaDedicatoria.value;
+            salvarNoStorage();
+        });
+    }
 });
 
 function renderizarSumario() {
+  if (!sumarioConteudo) return;
   sumarioConteudo.innerHTML = "";
 
   if (livro.partes.every((p) => p.poemas.length === 0)) {
@@ -473,31 +474,33 @@ function renderizarPoema() {
   const parte = selecao.parteId ? encontrarParte(selecao.parteId) : null;
 
   const temPoema = !!poema;
-  estadoVazio.classList.toggle("visivel", !temPoema);
-  editorConteudo.classList.toggle("visivel", temPoema);
+  if (estadoVazio) estadoVazio.classList.toggle("visivel", !temPoema);
+  if (editorConteudo) editorConteudo.classList.toggle("visivel", temPoema);
   if (!temPoema) return;
 
   const indexParte = livro.partes.findIndex((p) => p.id === parte.id);
-  editorParteLabel.textContent = `Parte ${NOME_ROMANOS[indexParte] || indexParte + 1} — ${parte.titulo}`;
+  if (editorParteLabel) editorParteLabel.textContent = `Parte ${NOME_ROMANOS[indexParte] || indexParte + 1} — ${parte.titulo}`;
 
-  inputTitulo.value = poema.titulo;
-  textareaTexto.value = poema.texto;
+  if (inputTitulo) inputTitulo.value = poema.titulo;
+  if (textareaTexto) textareaTexto.value = poema.texto;
   atualizarContadorPoema();
   marcarComoSalvo();
 }
 
 function atualizarContadorPoema() {
-  contadorPalavras.textContent = `${contarPalavras(textareaTexto.value)} palavras`;
+  if (contadorPalavras && textareaTexto) {
+    contadorPalavras.textContent = `${contarPalavras(textareaTexto.value)} palavras`;
+  }
 }
 
 function marcarComoPendente() {
-  respiroEl.classList.add("pendente");
-  statusSalvamento.textContent = "escrevendo...";
+  if (respiroEl) respiroEl.classList.add("pendente");
+  if (statusSalvamento) statusSalvamento.textContent = "escrevendo...";
 }
 
 function marcarComoSalvo() {
-  respiroEl.classList.remove("pendente");
-  statusSalvamento.textContent = "tudo salvo";
+  if (respiroEl) respiroEl.classList.remove("pendente");
+  if (statusSalvamento) statusSalvamento.textContent = "tudo salvo";
 }
 
 function criarNovoPoema(parteId) {
@@ -509,16 +512,23 @@ function criarNovoPoema(parteId) {
   parte.poemas.push(novo);
   salvarNoStorage();
   irPara("poema", parte.id, novo.id);
-  setTimeout(() => { inputTitulo.focus(); inputTitulo.select(); }, 0);
+  setTimeout(() => { 
+    if (inputTitulo) {
+      inputTitulo.focus(); 
+      inputTitulo.select(); 
+    }
+  }, 0);
 }
 
-btnNovaParte.addEventListener("click", () => {
-  if (!isAutor) return;
-  const novaParte = { id: Date.now(), titulo: `Parte ${NOME_ROMANOS[livro.partes.length] || livro.partes.length + 1}`, poemas: [] };
-  livro.partes.push(novaParte);
-  salvarNoStorage();
-  renderizarPartes();
-});
+if (btnNovaParte) {
+  btnNovaParte.addEventListener("click", () => {
+    if (!isAutor) return;
+    const novaParte = { id: Date.now(), titulo: `Parte ${NOME_ROMANOS[livro.partes.length] || livro.partes.length + 1}`, poemas: [] };
+    livro.partes.push(novaParte);
+    salvarNoStorage();
+    renderizarPartes();
+  });
+}
 
 function excluirParte(parteId) {
   if (!isAutor) return;
@@ -549,19 +559,21 @@ function salvarPoemaAtual() {
   const poema = encontrarPoema(selecao.parteId, selecao.poemaId);
   if (!poema) return;
 
-  poema.titulo = inputTitulo.value.trim() || "Sem título";
-  poema.texto = textareaTexto.value;
+  if (inputTitulo) poema.titulo = inputTitulo.value.trim() || "Sem título";
+  if (textareaTexto) poema.texto = textareaTexto.value;
   salvarNoStorage();
   renderizarPartes();
   marcarComoSalvo();
 }
 
-btnSalvar.addEventListener("click", () => {
-  if (!isAutor) return;
-  salvarPoemaAtual();
-  btnSalvar.textContent = "Salvo ✓";
-  setTimeout(() => (btnSalvar.textContent = "Salvar"), 1100);
-});
+if (btnSalvar) {
+  btnSalvar.addEventListener("click", () => {
+    if (!isAutor) return;
+    salvarPoemaAtual();
+    btnSalvar.textContent = "Salvo ✓";
+    setTimeout(() => (btnSalvar.textContent = "Salvar"), 1100);
+  });
+}
 
 function agendarAutosavePoema() {
   if (!isAutor) return;
@@ -570,89 +582,103 @@ function agendarAutosavePoema() {
   timerAutosave = setTimeout(salvarPoemaAtual, 900);
 }
 
-textareaTexto.addEventListener("input", () => { atualizarContadorPoema(); agendarAutosavePoema(); });
-inputTitulo.addEventListener("input", agendarAutosavePoema);
+if (textareaTexto) {
+  textareaTexto.addEventListener("input", () => { atualizarContadorPoema(); agendarAutosavePoema(); });
+}
+if (inputTitulo) {
+  inputTitulo.addEventListener("input", agendarAutosavePoema);
+}
 
-btnExcluir.addEventListener("click", () => {
-  if (!isAutor) return;
-  const poema = encontrarPoema(selecao.parteId, selecao.poemaId);
-  if (!poema) return;
-  if (!confirm(`Excluir "${poema.titulo || "Sem título"}"? Essa ação não pode ser desfeita.`)) return;
+if (btnExcluir) {
+  btnExcluir.addEventListener("click", () => {
+    if (!isAutor) return;
+    const poema = encontrarPoema(selecao.parteId, selecao.poemaId);
+    if (!poema) return;
+    if (!confirm(`Excluir "${poema.titulo || "Sem título"}"? Essa ação não pode ser desfeita.`)) return;
 
-  const parte = encontrarParte(selecao.parteId);
-  parte.poemas = parte.poemas.filter((p) => p.id !== poema.id);
-  salvarNoStorage();
-  irPara("sumario");
-});
+    const parte = encontrarParte(selecao.parteId);
+    if (parte) {
+      parte.poemas = parte.poemas.filter((p) => p.id !== poema.id);
+      salvarNoStorage();
+      irPara("sumario");
+    }
+  });
+}
 
-btnExportarPoema.addEventListener("click", () => {
-  const poema = encontrarPoema(selecao.parteId, selecao.poemaId);
-  if (!poema) return;
-  const conteudo = `${poema.titulo || "Sem título"}\n\n${poema.texto}`;
-  const nomeArquivo = (poema.titulo || "poema").toLowerCase().replace(/[^a-z0-9]+/g, "-") + ".txt";
-  baixarArquivo(nomeArquivo, conteudo);
-});
+if (btnExportarPoema) {
+  btnExportarPoema.addEventListener("click", () => {
+    const poema = encontrarPoema(selecao.parteId, selecao.poemaId);
+    if (!poema) return;
+    const conteudo = `${poema.titulo || "Sem título"}\n\n${poema.texto}`;
+    const nomeArquivo = (poema.titulo || "poema").toLowerCase().replace(/[^a-z0-9]+/g, "-") + ".txt";
+    baixarArquivo(nomeArquivo, conteudo);
+  });
+}
 
 function renderizarNotaFinal() {
-  textoNotaFinal.value = livro.notaFinal;
+  if (textoNotaFinal) textoNotaFinal.value = livro.notaFinal;
   marcarNotaComoSalva();
 }
 
 function marcarNotaComoPendente() {
-  respiroNota.classList.add("pendente");
-  statusSalvamentoNota.textContent = "escrevendo...";
+  if (respiroNota) respiroNota.classList.add("pendente");
+  if (statusSalvamentoNota) statusSalvamentoNota.textContent = "escrevendo...";
 }
 function marcarNotaComoSalva() {
-  respiroNota.classList.remove("pendente");
-  statusSalvamentoNota.textContent = "tudo salvo";
+  if (respiroNota) respiroNota.classList.remove("pendente");
+  if (statusSalvamentoNota) statusSalvamentoNota.textContent = "tudo salvo";
 }
 
 let timerAutosaveNota = null;
-textoNotaFinal.addEventListener("input", () => {
-  if (!isAutor) return;
-  marcarNotaComoPendente();
-  clearTimeout(timerAutosaveNota);
-  timerAutosaveNota = setTimeout(() => {
-    livro.notaFinal = textoNotaFinal.value;
-    salvarNoStorage();
-    marcarNotaComoSalva();
-  }, 900);
-});
+if (textoNotaFinal) {
+  textoNotaFinal.addEventListener("input", () => {
+    if (!isAutor) return;
+    marcarNotaComoPendente();
+    clearTimeout(timerAutosaveNota);
+    timerAutosaveNota = setTimeout(() => {
+      livro.notaFinal = textoNotaFinal.value;
+      salvarNoStorage();
+      marcarNotaComoSalva();
+    }, 900);
+  });
+}
 
 function renderizarBiografia() {
-  textoBiografia.value = livro.biografia;
+  if (textoBiografia) textoBiografia.value = livro.biografia;
   marcarBioComoSalva();
 }
 
 function marcarBioComoPendente() {
-  respiroBio.classList.add("pendente");
-  statusSalvamentoBio.textContent = "escrevendo...";
+  if (respiroBio) respiroBio.classList.add("pendente");
+  if (statusSalvamentoBio) statusSalvamentoBio.textContent = "escrevendo...";
 }
 function marcarBioComoSalva() {
-  respiroBio.classList.remove("pendente");
-  statusSalvamentoBio.textContent = "tudo salvo";
+  if (respiroBio) respiroBio.classList.remove("pendente");
+  if (statusSalvamentoBio) statusSalvamentoBio.textContent = "tudo salvo";
 }
 
 let timerAutosaveBio = null;
-textoBiografia.addEventListener("input", () => {
-  if (!isAutor) return;
-  marcarBioComoPendente();
-  clearTimeout(timerAutosaveBio);
-  timerAutosaveBio = setTimeout(() => {
-    livro.biografia = textoBiografia.value;
-    salvarNoStorage();
-    marcarBioComoSalva();
-  }, 900);
-});
+if (textoBiografia) {
+  textoBiografia.addEventListener("input", () => {
+    if (!isAutor) return;
+    marcarBioComoPendente();
+    clearTimeout(timerAutosaveBio);
+    timerAutosaveBio = setTimeout(() => {
+      livro.biografia = textoBiografia.value;
+      salvarNoStorage();
+      marcarBioComoSalva();
+    }, 900);
+  });
+}
 
 function salvarTudoSilenciosamente() {
   if (!isAutor) return;
   if (selecao.tipo === "poema") salvarPoemaAtual();
-  if (selecao.tipo === "notafinal") {
+  if (selecao.tipo === "notafinal" && textoNotaFinal) {
     livro.notaFinal = textoNotaFinal.value;
     salvarNoStorage();
   }
-  if (selecao.tipo === "sobreautor") {
+  if (selecao.tipo === "sobreautor" && textoBiografia) {
     livro.biografia = textoBiografia.value;
     salvarNoStorage();
   }
@@ -676,124 +702,127 @@ function renderizarTudo() {
   if (selecao.tipo === "sobreautor") renderizarBiografia();
 }
 
-btnExportarTudo.addEventListener("click", () => {
-  salvarTudoSilenciosamente();
+if (btnExportarTudo) {
+  btnExportarTudo.addEventListener("click", () => {
+    salvarTudoSilenciosamente();
 
-  const linhaSep = "\n\n" + "—".repeat(44) + "\n\n";
-  let partes = [];
+    const linhaSep = "\n\n" + "—".repeat(44) + "\n\n";
+    let partes = [];
 
-  let capaTexto = livro.capa.titulo || "Entre Versos e Silêncios";
-  if (livro.capa.subtitulo) capaTexto += `\n${livro.capa.subtitulo}`;
-  if (livro.capa.autor) capaTexto += `\n\n${livro.capa.autor}`;
-  if (livro.capa.dedicatoria) capaTexto += `\n\n${livro.capa.dedicatoria}`;
-  partes.push(capaTexto);
+    let capaTexto = livro.capa.titulo || "Entre Versos e Silêncios";
+    if (livro.capa.subtitulo) capaTexto += `\n${livro.capa.subtitulo}`;
+    if (livro.capa.autor) capaTexto += `\n\n${livro.capa.autor}`;
+    if (livro.capa.dedicatoria) capaTexto += `\n\n${livro.capa.dedicatoria}`;
+    partes.push(capaTexto);
 
-  let sumarioTexto = "SUMÁRIO\n";
-  livro.partes.forEach((parte, i) => {
-    if (parte.poemas.length === 0) return;
-    sumarioTexto += `\nParte ${NOME_ROMANOS[i] || i + 1} — ${parte.titulo}\n`;
-    parte.poemas.forEach((p) => { sumarioTexto += `    ‖ ${p.titulo || "Sem título"}\n`; });
-  });
-  partes.push(sumarioTexto);
-
-  const assinatura = assinaturaAutor();
-
-  livro.partes.forEach((parte, i) => {
-    if (parte.poemas.length === 0) return;
-    let text = `PARTE ${NOME_ROMANOS[i] || i + 1} — ${parte.titulo.toUpperCase()}\n`;
-    parte.poemas.forEach((p) => {
-      text += `\n\n‖ ${p.titulo || "Sem título"}\n\n${p.texto}`;
-      if (assinatura) text += `\n\n— ${assinatura}`;
+    let sumarioTexto = "SUMÁRIO\n";
+    livro.partes.forEach((parte, i) => {
+      if (parte.poemas.length === 0) return;
+      sumarioTexto += `\nParte ${NOME_ROMANOS[i] || i + 1} — ${parte.titulo}\n`;
+      parte.poemas.forEach((p) => { sumarioTexto += `    ‖ ${p.titulo || "Sem título"}\n`; });
     });
-    partes.push(text);
-  });
+    partes.push(sumarioTexto);
 
-  if (livro.notaFinal.trim()) {
-    partes.push(`NOTA FINAL\n\n${livro.notaFinal}`);
-  }
+    const assinatura = assinaturaAutor();
 
-  if (livro.biografia.trim()) {
-    let bloco = "SOBRE O AUTOR\n\n";
-    if (assinatura) bloco += `${assinatura}\n\n`;
-    bloco += livro.biografia;
-    partes.push(bloco);
-  }
-
-  const conteudo = partes.join(linhaSep);
-  baixarArquivo("entre-versos-e-silencios.txt", conteudo);
-});
-
-btnPreviewLivro.addEventListener("click", () => {
-  salvarTudoSilenciosamente();
-
-  const escapar = (s) => (s || "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  const quebraLinhas = (s) => escapar(s).split("\n").map((l) => l || "&nbsp;").join("<br>");
-
-  let paginas = "";
-
-  paginas += `
-    <section class="pg pg-capa">
-      <span class="pg-cesura">❧</span>
-      <h1>${escapar(livro.capa.titulo || "Entre Versos e Silêncios")}</h1>
-      ${livro.capa.subtitulo ? `<p class="pg-subtitulo">${escapar(livro.capa.subtitulo)}</p>` : ""}
-      ${livro.capa.autor ? `<p class="pg-autor">${escapar(livro.capa.autor)}</p>` : ""}
-      ${livro.capa.dedicatoria ? `<p class="pg-dedicatoria">${quebraLinhas(livro.capa.dedicatoria)}</p>` : ""}
-    </section>`;
-
-  let linhasSumario = "";
-  livro.partes.forEach((parte, i) => {
-    if (parte.poemas.length === 0) return;
-    linhasSumario += `<p class="pg-sumario-parte">Parte ${NOME_ROMANOS[i] || i + 1} — ${escapar(parte.titulo)}</p>`;
-    parte.poemas.forEach((p) => {
-      linhasSumario += `<p class="pg-sumario-item">${escapar(p.titulo || "Sem título")}</p>`;
+    livro.partes.forEach((parte, i) => {
+      if (parte.poemas.length === 0) return;
+      let text = `PARTE ${NOME_ROMANOS[i] || i + 1} — ${parte.titulo.toUpperCase()}\n`;
+      parte.poemas.forEach((p) => {
+        text += `\n\n‖ ${p.titulo || "Sem título"}\n\n${p.texto}`;
+        if (assinatura) text += `\n\n— ${assinatura}`;
+      });
+      partes.push(text);
     });
-  });
-  paginas += `
-    <section class="pg pg-sumario">
-      <h2>Sumário</h2>
-      ${linhasSumario || '<p class="pg-sumario-item"><em>ainda sem poemas</em></p>'}
-    </section>`;
 
-  livro.partes.forEach((parte, i) => {
-    if (parte.poemas.length === 0) return;
+    if (livro.notaFinal && livro.notaFinal.trim()) {
+      partes.push(`NOTA FINAL\n\n${livro.notaFinal}`);
+    }
+
+    if (livro.biografia && livro.biografia.trim()) {
+      let bloco = "SOBRE O AUTOR\n\n";
+      if (assinatura) bloco += `${assinatura}\n\n`;
+      bloco += livro.biografia;
+      partes.push(bloco);
+    }
+
+    const conteudo = partes.join(linhaSep);
+    baixarArquivo("entre-versos-e-silencios.txt", conteudo);
+  });
+}
+
+if (btnPreviewLivro) {
+  btnPreviewLivro.addEventListener("click", () => {
+    salvarTudoSilenciosamente();
+
+    const escapar = (s) => (s || "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const quebraLinhas = (s) => escapar(s).split("\n").map((l) => l || "&nbsp;").join("<br>");
+
+    let paginas = "";
 
     paginas += `
-      <section class="pg pg-parte-abertura">
+      <section class="pg pg-capa">
         <span class="pg-cesura">❧</span>
-        <p class="pg-parte-numero">Parte ${NOME_ROMANOS[i] || i + 1}</p>
-        <h2>${escapar(parte.titulo)}</h2>
+        <h1>${escapar(livro.capa.titulo || "Entre Versos e Silêncios")}</h1>
+        ${livro.capa.subtitulo ? `<p class="pg-subtitulo">${escapar(livro.capa.subtitulo)}</p>` : ""}
+        ${livro.capa.autor ? `<p class="pg-autor">${escapar(livro.capa.autor)}</p>` : ""}
+        ${livro.capa.dedicatoria ? `<p class="pg-dedicatoria">${quebraLinhas(livro.capa.dedicatoria)}</p>` : ""}
       </section>`;
 
-    parte.poemas.forEach((poema) => {
+    let linhasSumario = "";
+    livro.partes.forEach((parte, i) => {
+      if (parte.poemas.length === 0) return;
+      linhasSumario += `<p class="pg-sumario-parte">Parte ${NOME_ROMANOS[i] || i + 1} — ${escapar(parte.titulo)}</p>`;
+      parte.poemas.forEach((p) => {
+        linhasSumario += `<p class="pg-sumario-item">${escapar(p.titulo || "Sem título")}</p>`;
+      });
+    });
+    paginas += `
+      <section class="pg pg-sumario">
+        <h2>Sumário</h2>
+        ${linhasSumario || '<p class="pg-sumario-item"><em>ainda sem poemas</em></p>'}
+      </section>`;
+
+    livro.partes.forEach((parte, i) => {
+      if (parte.poemas.length === 0) return;
+
       paginas += `
-        <section class="pg pg-poema">
-          <h3>${escapar(poema.titulo || "Sem título")}</h3>
-          <div class="pg-poema-texto">${quebraLinhas(poema.texto)}</div>
-          ${assinaturaAutor() ? `<p class="pg-assinatura">— ${escapar(assinaturaAutor())}</p>` : ""}
+        <section class="pg pg-parte-abertura">
+          <span class="pg-cesura">❧</span>
+          <p class="pg-parte-numero">Parte ${NOME_ROMANOS[i] || i + 1}</p>
+          <h2>${escapar(parte.titulo)}</h2>
         </section>`;
+
+      parte.poemas.forEach((poema) => {
+        paginas += `
+          <section class="pg pg-poema">
+            <h3>${escapar(poema.titulo || "Sem título")}</h3>
+            <div class="pg-poema-texto">${quebraLinhas(poema.texto)}</div>
+            ${assinaturaAutor() ? `<p class="pg-assinatura">— ${escapar(assinaturaAutor())}</p>` : ""}
+          </section>`;
+      });
     });
-  });
 
-  if (livro.notaFinal.trim()) {
-    paginas += `
-      <section class="pg pg-notafinal">
-        <span class="pg-cesura">❧</span>
-        <h2>Nota final</h2>
-        <div class="pg-poema-texto">${quebraLinhas(livro.notaFinal)}</div>
-      </section>`;
-  }
+    if (livro.notaFinal && livro.notaFinal.trim()) {
+      paginas += `
+        <section class="pg pg-notafinal">
+          <span class="pg-cesura">❧</span>
+          <h2>Nota final</h2>
+          <div class="pg-poema-texto">${quebraLinhas(livro.notaFinal)}</div>
+        </section>`;
+    }
 
-  if (livro.biografia.trim()) {
-    paginas += `
-      <section class="pg pg-notafinal">
-        <span class="pg-cesura">❧</span>
-        <h2>Sobre o autor</h2>
-        ${assinaturaAutor() ? `<p class="pg-autor" style="margin-bottom:20px;">${escapar(assinaturaAutor())}</p>` : ""}
-        <div class="pg-poema-texto">${quebraLinhas(livro.biografia)}</div>
-      </section>`;
-  }
+    if (livro.biografia && livro.biografia.trim()) {
+      paginas += `
+        <section class="pg pg-notafinal">
+          <span class="pg-cesura">❧</span>
+          <h2>Sobre o autor</h2>
+          ${assinaturaAutor() ? `<p class="pg-autor" style="margin-bottom:20px;">${escapar(assinaturaAutor())}</p>` : ""}
+          <div class="pg-poema-texto">${quebraLinhas(livro.biografia)}</div>
+        </section>`;
+    }
 
-  const html = `<!DOCTYPE html>
+    const html = `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -836,10 +865,11 @@ ${paginas}
 </body>
 </html>`;
 
-  const blob = new Blob([html], { type: "text/html;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  window.open(url, "_blank");
-});
+    const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    window.open(url, "_blank");
+  });
+}
 
 function estatisticasDoLivro(l) {
   const poemas = l.partes.flatMap((p) => p.poemas);
@@ -848,16 +878,17 @@ function estatisticasDoLivro(l) {
 }
 
 function mostrarTelaBiblioteca() {
-  telaLivro.classList.add("escondido");
-  telaBiblioteca.classList.remove("escondido");
+  if (telaLivro) telaLivro.classList.add("escondido");
+  if (telaBiblioteca) telaBiblioteca.classList.remove("escondido");
 }
 
 function mostrarTelaLivro() {
-  telaBiblioteca.classList.add("escondido");
-  telaLivro.classList.remove("escondido");
+  if (telaBiblioteca) telaBiblioteca.classList.add("escondido");
+  if (telaLivro) telaLivro.classList.remove("escondido");
 }
 
 function renderizarEstante() {
+  if (!estanteEl) return;
   estanteEl.innerHTML = "";
 
   biblioteca.forEach((l) => {
@@ -910,7 +941,7 @@ function abrirLivro(id) {
   livro = biblioteca.find((l) => l.id === id);
   if (!livro) return;
   selecao = { tipo: "capa", parteId: null, poemaId: null };
-  livroTituloSidebar.innerHTML = (livro.capa.titulo || "Sem título").replace(/\n/g, "<br>");
+  if (livroTituloSidebar) livroTituloSidebar.innerHTML = (livro.capa.titulo || "Sem título").replace(/\n/g, "<br>");
   mostrarTelaLivro();
   renderizarTudo();
 }
@@ -984,9 +1015,6 @@ function inicializarControleTema() {
   }
 }
 
-inicializarApp();
-inicializarControleTema();
-
 async function sincronizarLivrosDaNuvem() {
    const { data, error } = await supabaseClient
     .from('books')
@@ -1008,4 +1036,6 @@ async function sincronizarLivrosDaNuvem() {
     }
 }
 
+inicializarApp();
+inicializarControleTema();
 sincronizarLivrosDaNuvem();

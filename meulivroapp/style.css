@@ -253,32 +253,6 @@ button { font-family: var(--font-corpo); }
   padding: 0 6px;
 }
 
-.item-nav {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 10px 8px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  color: var(--cor-texto-suave);
-  transition: background-color 0.15s ease, color 0.15s ease;
-}
-
-.item-nav-icone {
-  color: var(--cor-vinho-forte);
-  font-family: var(--font-display);
-  font-size: 14px;
-  flex-shrink: 0;
-}
-
-.item-nav:hover { background-color: #1f1822; color: var(--cor-texto); }
-
-.item-nav.ativo {
-  background-color: #241a24;
-  color: var(--cor-acento-forte);
-}
-
 .secao-titulo {
   font-size: 10.5px;
   text-transform: uppercase;
@@ -993,4 +967,122 @@ body.tema-livro .tela-jukebox .livro-card:not(.novo) {
   border-left: 3px solid var(--cor-vinho-forte) !important;
   transform: rotate(-2deg);
   box-shadow: 2px 8px 20px rgba(36, 28, 25, 0.04) !important;
+}
+
+.btn-menu-vertical {
+    background: none !important;
+    border: none !important;
+    color: #d4af37 !important;
+    cursor: pointer !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 10px auto !important;
+    font-family: 'Cinzel', serif !important;
+    text-transform: uppercase !important;
+    line-height: 1.2 !important;
+}
+
+.btn-menu-vertical span:first-child {
+    font-size: 1.5rem !important;
+}
+
+.btn-menu-vertical span:last-child {
+    font-size: 0.7rem !important;
+    letter-spacing: 2px !important;
+}
+
+.btn-menu-flutuante:hover {
+    opacity: 1 !important;
+}
+
+.btn-menu-vertical {
+    background: none !important;
+    border: none !important;
+    color: #d4af37 !important;
+    cursor: pointer !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    margin-bottom: 15px !important;
+    font-family: 'Cinzel', serif !important;
+    text-transform: uppercase !important;
+    line-height: 1.2 !important;
+}
+
+.btn-menu-vertical span:first-child {
+    font-size: 1.6rem !important;
+}
+
+.btn-menu-vertical span:last-child {
+    font-size: 0.7rem !important;
+    letter-spacing: 2px !important;
+}
+
+.secao-titulo {
+    color: #8c7e5c !important; 
+    font-family: 'Inter', sans-serif !important;
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    padding: 15px 25px 8px 25px !important;
+    margin-top: 10px !important;
+}
+
+.separador-menu {
+    height: 1px !important;
+    background-color: #2a2a2a !important; 
+    margin: 10px 25px !important;
+}
+
+.item-nav {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    padding: 12px 25px !important;
+    color: #b8a87d !important;
+    font-family: 'Cormorant Garamond', serif !important;
+    font-size: 1.2rem !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+.item-nav:hover {
+    color: #d4af37 !important;
+}
+
+.item-nav.ativo {
+    background-color: rgba(212, 175, 55, 0.15) !important;
+    color: #d4af37 !important;
+    border-right: 3px solid #d4af37 !important; 
+}
+
+.item-nav-icone {
+    font-size: 1.3rem !important;
+}
+
+.menu-cabecalho {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 20px 25px !important;
+    border-bottom: 1px solid var(--cor-linha) !important;
+    font-family: var(--font-display) !important;
+    font-size: 18px !important;
+    color: var(--cor-acento-forte) !important;
+    font-weight: 600 !important;
+    letter-spacing: 1px !important;
+}
+
+.btn-fechar-menu {
+    background: transparent !important;
+    border: none !important;
+    color: var(--cor-acento-forte) !important;
+    font-size: 26px !important;
+    cursor: pointer !important;
+    line-height: 1 !important;
 }
