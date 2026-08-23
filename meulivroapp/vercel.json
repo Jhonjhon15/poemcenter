@@ -1,5 +1,8 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/((?!editor\\.html).*)", "destination": "/index.html" }
+  ],
+  "redirects": [
+    { "source": "/editor.html", "destination": "/", "permanent": true }
   ]
 }
