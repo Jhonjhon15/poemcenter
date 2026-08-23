@@ -516,14 +516,13 @@ onde vejo isso que tu disse eu vou procurar em qual arquivo?
     }
 
     function fazerLogin() {
-   
-    mudarTela('tela-principal'); 
-}
+        window.location.href = "editor.html";
+    }
 
     function fazerCadastro() {
-    alert("Conta criada com sucesso! Entrando...");
-    mudarTela('tela-principal');
-}
+        alert("Conta criada com sucesso! Entrando...");
+        window.location.href = "editor.html";
+    }
 
     document.addEventListener('keydown', function (e) {
         if (e.key !== 'Enter' || e.isComposing || e.keyCode === 229) return;
