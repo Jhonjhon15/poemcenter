@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="pt-BR" style="background-color: #0d0b09;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0d0b09">
+<title>PoemCenter — Onde os versos repousam</title>
+<meta name="description" content="PoemCenter: um santuário literário de leitura e autoria. Percorra a estante, leia os manuscritos mais recentes e entre no modo imersivo de leitura profunda.">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --noite: #0d0b09;
+        --madeira: #1b1310;
+        --dourado: #d4af37;
+        --dourado-claro: #ecd08a;
+        --creme: #ece3d6;
+        --creme-suave: rgba(236, 227, 214, 0.72);
+
+        --font-display: 'Cormorant Garamond', Georgia, serif;
+        --font-corpo: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+        min-height: 100svh;
+        background-color: var(--noite);
+        color: var(--creme);
+        font-family: var(--font-corpo);
+        overflow-x: hidden;
+        position: relative;
+    }
+
+    /* ---------- Ambiente: escrivaninha, luz e sombra ---------- */
+
+    .ambiente {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background-image: url('img/escrivaninha-tall.png');
+        background-size: cover;
+        background-position: center bottom;
+        background-repeat: no-repeat;
+        background-color: var(--madeira);
+    }
+
+    /* Vinheta: escurece bordas e o topo para dar leitura ao texto */
+    .vinheta {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        background:
+            radial-gradient(ellipse 120% 70% at 50% 42%, transparent 0%, rgba(9, 7, 6, 0.55) 62%, rgba(7, 6, 5, 0.9) 100%),
+            linear-gradient(to bottom, rgba(8, 6, 5, 0.72) 0%, rgba(8, 6, 5, 0.28) 34%, rgba(8, 6, 5, 0.42) 72%, rgba(8, 6, 5, 0.78) 100%);
+    }
+
+    /* Luz da luminária (canto superior esquerdo) */
+    .luz-luminaria {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        mix-blend-mode: screen;
+        background: radial-gradient(circle 46vmax at 16% 24%, rgba(224, 168, 76, 0.24) 0%, rgba(196, 138, 58, 0.1) 38%, transparent 68%);
+        animation: respirarLuz 7s ease-in-out infinite;
+    }
+
+    /* Luz da vela (lateral direita) */
+    .luz-vela {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        mix-blend-mode: screen;
+        background: radial-gradient(circle 22vmax at 84% 68%, rgba(255, 168, 74, 0.26) 0%, rgba(214, 122, 44, 0.11) 42%, transparent 72%);
+        animation: tremularVela 3.4s ease-in-out infinite;
+    }
+
+    @keyframes respirarLuz {
+        0%, 100% { opacity: 0.88; }
+        50%      { opacity: 1; }
+    }
+
+    @keyframes tremularVela {
+        0%   { opacity: 0.82; transform: scale(1); }
+        18%  { opacity: 1;    transform: scale(1.02); }
+        34%  { opacity: 0.76; transform: scale(0.99); }
+        52%  { opacity: 0.96; transform: scale(1.015); }
+        70%  { opacity: 0.8;  transform: scale(1); }
+        88%  { opacity: 1;    transform: scale(1.02); }
+        100% { opacity: 0.82; transform: scale(1); }
+    }
+
+    /* ---------- Poeira mágica dourada ---------- */
+
+    .poeira {
+        position: fixed;
+        inset: 0;
+        z-index: 2;
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    .particula {
+        position: absolute;
+        bottom: -14px;
+        border-radius: 50%;
+        background: var(--dourado-claro);
+        opacity: 0;
+        will-change: transform, opacity;
+        animation-name: flutuar;
+        animation-timing-function: ease-in-out;
+        animation-iteration-count: infinite;
+    }
+
+    @keyframes flutuar {
+        0%   { opacity: 0;    transform: translate3d(0, 0, 0) scale(0.5); }
+        14%  { opacity: 0.85; }
+        50%  { transform: translate3d(24px, -48vh, 0) scale(1); }
+        78%  { opacity: 0.5; }
+        100% { opacity: 0;    transform: translate3d(-16px, -98vh, 0) scale(0.7); }
+    }
+
+    /* ---------- Cena ---------- */
+
+    .cena {
+        position: relative;
+        z-index: 3;
+        min-height: 100svh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        gap: 40px;
+        padding: 26px 22px 34px;
+    }
+
+    .link-entrar {
+        align-self: flex-end;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: rgba(236, 227, 214, 0.6);
+        border: 1px solid rgba(212, 175, 55, 0.24);
+        border-radius: 999px;
+        padding: 8px 16px;
+        backdrop-filter: blur(6px);
+        background: rgba(16, 12, 10, 0.34);
+        transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+    }
+    .link-entrar:hover,
+    .link-entrar:focus-visible {
+        color: var(--dourado-claro);
+        border-color: rgba(212, 175, 55, 0.6);
+        background: rgba(28, 20, 14, 0.55);
+    }
+
+    /* ---------- Cabeçalho central ---------- */
+
+    .hero {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: 22px;
+        padding: 12px 0 8px;
+    }
+
+    /* Elemento-assinatura: medalhão iluminado da logo */
+    .medalhao {
+        position: relative;
+        width: clamp(104px, 22vw, 138px);
+        aspect-ratio: 1;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+    }
+
+    .medalhao::before {
+        content: '';
+        position: absolute;
+        inset: -34%;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(212, 175, 55, 0.3) 0%, rgba(212, 175, 55, 0.09) 44%, transparent 72%);
+        animation: halo 6s ease-in-out infinite;
+    }
+
+    .medalhao::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        border: 1px solid rgba(212, 175, 55, 0.42);
+        box-shadow:
+            0 0 26px rgba(212, 175, 55, 0.24),
+            inset 0 0 22px rgba(212, 175, 55, 0.14);
+    }
+
+    @keyframes halo {
+        0%, 100% { opacity: 0.7;  transform: scale(0.97); }
+        50%      { opacity: 1;    transform: scale(1.04); }
+    }
+
+    .medalhao img {
+        position: relative;
+        z-index: 1;
+        width: 68%;
+        height: 68%;
+        object-fit: contain;
+        /* Sepia converte o anel frio da marca em ouro velho, integrando-a à luz da cena */
+        filter: sepia(0.72) saturate(1.45) hue-rotate(-8deg) brightness(1.04)
+                drop-shadow(0 0 14px rgba(212, 175, 55, 0.4));
+    }
+
+    .marca {
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: clamp(42px, 10.5vw, 78px);
+        line-height: 1;
+        color: var(--dourado);
+        letter-spacing: 0.03em;
+        text-shadow:
+            0 0 34px rgba(212, 175, 55, 0.32),
+            0 2px 18px rgba(0, 0, 0, 0.7);
+    }
+
+    .filete {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        width: min(240px, 62vw);
+        color: rgba(212, 175, 55, 0.62);
+        font-size: 12px;
+    }
+    .filete::before,
+    .filete::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(to right, transparent, rgba(212, 175, 55, 0.5), transparent);
+    }
+
+    .epigrafe {
+        font-family: var(--font-display);
+        font-style: italic;
+        font-weight: 300;
+        font-size: clamp(17px, 3.9vw, 25px);
+        line-height: 1.55;
+        color: rgba(236, 227, 214, 0.86);
+        max-width: 34ch;
+        text-wrap: pretty;
+        text-shadow: 0 2px 14px rgba(0, 0, 0, 0.75);
+    }
+
+    /* ---------- Cards de acesso rápido (vidro fosco) ---------- */
+
+    .acesso-rapido {
+        width: 100%;
+        max-width: 1000px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
+        gap: 14px;
+    }
+
+    .card {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 18px 16px 20px;
+        border-radius: 18px;
+        text-decoration: none;
+        border: 1px solid rgba(212, 175, 55, 0.26);
+        background: linear-gradient(158deg, rgba(38, 28, 21, 0.5) 0%, rgba(16, 12, 10, 0.4) 100%);
+        backdrop-filter: blur(15px) saturate(125%);
+        -webkit-backdrop-filter: blur(15px) saturate(125%);
+        box-shadow:
+            0 16px 34px rgba(0, 0, 0, 0.46),
+            inset 0 1px 0 rgba(236, 208, 138, 0.12);
+        transition: transform 0.32s ease, border-color 0.32s ease, box-shadow 0.32s ease;
+    }
+
+    .card:hover,
+    .card:focus-visible {
+        transform: translateY(-5px);
+        border-color: rgba(212, 175, 55, 0.55);
+        box-shadow:
+            0 22px 44px rgba(0, 0, 0, 0.55),
+            0 0 0 1px rgba(212, 175, 55, 0.12),
+            inset 0 1px 0 rgba(236, 208, 138, 0.2);
+    }
+
+    .card-icone {
+        font-size: 21px;
+        line-height: 1;
+        /* Leve sepia mantém os ícones legíveis sem brigar com a paleta dourada */
+        filter: sepia(0.45) saturate(1.2) drop-shadow(0 0 10px rgba(212, 175, 55, 0.35));
+    }
+
+    .card h2 {
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: clamp(19px, 2.4vw, 23px);
+        line-height: 1.2;
+        color: var(--dourado-claro);
+        letter-spacing: 0.01em;
+    }
+
+    .card p {
+        font-size: 13px;
+        line-height: 1.55;
+        color: var(--creme-suave);
+        text-wrap: pretty;
+    }
+
+    :focus-visible {
+        outline: 2px solid rgba(212, 175, 55, 0.75);
+        outline-offset: 3px;
+    }
+
+    /* ---------- Responsivo ---------- */
+
+    @media (min-width: 760px) {
+        .ambiente {
+            background-image: url('img/escrivaninha-wide.png');
+        }
+        .luz-luminaria {
+            background: radial-gradient(circle 40vmax at 12% 30%, rgba(224, 168, 76, 0.26) 0%, rgba(196, 138, 58, 0.1) 38%, transparent 68%);
+        }
+        .luz-vela {
+            background: radial-gradient(circle 18vmax at 88% 58%, rgba(255, 168, 74, 0.28) 0%, rgba(214, 122, 44, 0.11) 42%, transparent 72%);
+        }
+        .cena {
+            padding: 34px 40px 46px;
+            gap: 56px;
+        }
+        .acesso-rapido {
+            gap: 22px;
+        }
+        .card {
+            padding: 24px 22px 26px;
+            gap: 10px;
+        }
+    }
+
+    @media (max-width: 400px) {
+        .acesso-rapido {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+            animation: none !important;
+            transition: none !important;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="ambiente" aria-hidden="true"></div>
+<div class="vinheta" aria-hidden="true"></div>
+<div class="luz-luminaria" aria-hidden="true"></div>
+<div class="luz-vela" aria-hidden="true"></div>
+<div class="poeira" id="poeira" aria-hidden="true"></div>
+
+<main class="cena">
+
+    <a href="index.html" class="link-entrar">Entrar no Santuário</a>
+
+    <header class="hero">
+        <div class="medalhao">
+            <img src="logo.png" alt="Logo do PoemCenter">
+        </div>
+
+        <h1 class="marca">PoemCenter</h1>
+
+        <div class="filete" aria-hidden="true">&#10087;</div>
+
+        <p class="epigrafe">&ldquo;Escrevo porque descobri que algumas partes de mim s&oacute; sabem existir em palavras.&rdquo;</p>
+    </header>
+
+    <nav class="acesso-rapido" aria-label="Acesso r&aacute;pido">
+
+        <a class="card" href="editor.html#estante">
+            <span class="card-icone" aria-hidden="true">&#128218;</span>
+            <h2>A Estante</h2>
+            <p>Percorra os livros e descubra os versos guardados.</p>
+        </a>
+
+        <a class="card" href="editor.html#manuscritos">
+            <span class="card-icone" aria-hidden="true">&#9997;&#65039;</span>
+            <h2>&Uacute;ltimos Manuscritos</h2>
+            <p>Leia as poesias mais recentes do autor.</p>
+        </a>
+
+        <a class="card" href="atmosfera.html">
+            <span class="card-icone" aria-hidden="true">&#128367;&#65039;</span>
+            <h2>Modo Imersivo</h2>
+            <p>Ative a leitura silenciosa e profunda.</p>
+        </a>
+
+    </nav>
+
+</main>
+
+<script>
+    (function criarPoeiraDourada() {
+        const container = document.getElementById('poeira');
+        if (!container) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+        const total = window.innerWidth < 700 ? 34 : 58;
+        const fragmento = document.createDocumentFragment();
+
+        for (let i = 0; i < total; i++) {
+            const particula = document.createElement('span');
+            particula.className = 'particula';
+
+            const tamanho = (Math.random() * 2.6 + 1).toFixed(2);
+            const brilho = (Math.random() * 0.4 + 0.4).toFixed(2);
+
+            particula.style.width = tamanho + 'px';
+            particula.style.height = tamanho + 'px';
+            particula.style.left = (Math.random() * 100).toFixed(2) + '%';
+            particula.style.animationDuration = (Math.random() * 16 + 16).toFixed(1) + 's';
+            particula.style.animationDelay = '-' + (Math.random() * 26).toFixed(1) + 's';
+            particula.style.boxShadow = '0 0 ' + (tamanho * 3).toFixed(1) + 'px rgba(236, 208, 138, ' + brilho + ')';
+
+            fragmento.appendChild(particula);
+        }
+
+        container.appendChild(fragmento);
+    })();
+</script>
+
+</body>
+</html>
