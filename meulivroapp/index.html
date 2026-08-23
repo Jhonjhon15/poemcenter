@@ -441,7 +441,7 @@
                             <label for="senha-cadastro">Senha secreta</label>
                             <input type="password" id="senha-cadastro" placeholder="••••••••">
                         </div>
-
+onde vejo isso que tu disse eu vou procurar em qual arquivo?
                         <button type="button" class="btn-login" onclick="fazerCadastro()">Registrar</button>
                         <a class="link-voltar-login" role="button" tabindex="0" onclick="mudarTela('login')">&larr; Voltar para o login</a>
                     </div>
@@ -516,13 +516,14 @@
     }
 
     function fazerLogin() {
-        window.location.href = "editor.html";
-    }
+   
+    mudarTela('tela-principal'); 
+}
 
     function fazerCadastro() {
-        alert("Conta criada com sucesso! Entrando...");
-        window.location.href = "editor.html";
-    }
+    alert("Conta criada com sucesso! Entrando...");
+    mudarTela('tela-principal');
+}
 
     document.addEventListener('keydown', function (e) {
         if (e.key !== 'Enter' || e.isComposing || e.keyCode === 229) return;
