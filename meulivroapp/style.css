@@ -50,11 +50,11 @@ button { font-family: var(--font-corpo); }
   object-fit: contain;
   margin-bottom: 16px;
   filter: drop-shadow(0 0 18px rgba(194, 154, 90, 0.25));
-  transition: filter 0.3s ease, transform 0.3s ease; /* Suaviza a animação */
+  transition: filter 0.3s ease, transform 0.3s ease; 
 }
 .biblioteca-logo:hover {
-  transform: scale(1.06) rotate(-4deg); /* Leve inclinação poética */
-  filter: drop-shadow(0 0 26px rgba(194, 154, 90, 0.5)); /* Aumenta o brilho dourado */
+  transform: scale(1.06) rotate(-4deg); 
+  filter: drop-shadow(0 0 26px rgba(194, 154, 90, 0.5)); 
 }
 
 .biblioteca-header h1 {
