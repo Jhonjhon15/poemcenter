@@ -1,8 +1,7 @@
 {
+  "cleanUrls": true,
+  "trailingSlash": false,
   "rewrites": [
-    { "source": "/((?!editor\\.html).*)", "destination": "/index.html" }
-  ],
-  "redirects": [
-    { "source": "/editor.html", "destination": "/", "permanent": true }
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
