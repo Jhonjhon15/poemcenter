@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Menu, X } from 'lucide-react';
 
 const NAV_LINKS = [
   { label: 'Início', href: '#inicio' },
@@ -9,6 +10,7 @@ const NAV_LINKS = [
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -57,26 +59,25 @@ export default function Navbar() {
         </a>
 
         <button
-          className="md:hidden text-gold-400 text-2xl"
-          aria-label="Abrir menu"
-          onClick={() => {
-            const menu = document.getElementById('mobile-menu');
-            menu?.classList.toggle('hidden');
-          }}
+          className="md:hidden text-gold-400 transition-colors hover:text-gold-500"
+          aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
+          onClick={() => setMenuOpen(!menuOpen)}
         >
-          ☰
+          {menuOpen ? <X size={26} /> : <Menu size={26} />}
         </button>
       </nav>
 
       <div
-        id="mobile-menu"
-        className="hidden md:hidden absolute top-full left-0 right-0 bg-night-900/95 backdrop-blur-md border-b border-gold-500/10 px-6 py-4"
+        className={`md:hidden overflow-hidden transition-all duration-300 bg-night-900/95 backdrop-blur-md border-b border-gold-500/10 ${
+          menuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+        }`}
       >
-        <ul className="flex flex-col gap-4">
+        <ul className="flex flex-col gap-4 px-6 py-4">
           {NAV_LINKS.map((link) => (
             <li key={link.href}>
               <a
                 href={link.href}
+                onClick={() => setMenuOpen(false)}
                 className="font-sans text-sm text-cream-300/70 hover:text-gold-400 transition-colors"
               >
                 {link.label}
