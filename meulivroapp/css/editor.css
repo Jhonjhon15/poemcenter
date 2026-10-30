@@ -47,14 +47,16 @@
 /* Efeito de brilho nos Orbes */
 .svg-orbe-glow {
   opacity: 0;
-  transition: opacity 0.25s ease, filter 0.25s ease;
+  fill: rgba(240, 205, 120, 0.16);
+  stroke: rgba(255, 215, 0, 0.55);
+  stroke-width: 1.5;
+  transition: opacity 0.3s ease;
   pointer-events: none;
 }
 
 .svg-clicavel:hover .svg-orbe-glow,
 .svg-clicavel:focus .svg-orbe-glow {
   opacity: 1;
-  filter: drop-shadow(0 0 18px rgba(227, 199, 120, 0.85));
 }
 
 .svg-orbe-rotulo {

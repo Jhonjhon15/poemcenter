@@ -66,31 +66,54 @@
       });
     });
 
-    // 1. Cards de Onboarding na Tela de Início
-    const cardEstante = document.getElementById("cardEstante");
-    if (cardEstante) {
-      cardEstante.addEventListener("click", function () {
-        mostrarTela("biblioteca");
-      });
-    }
-
-    const cardManuscritos = document.getElementById("cardManuscritos");
-    if (cardManuscritos) {
-      cardManuscritos.addEventListener("click", function () {
-        if (typeof window.abrirUltimoManuscrito === "function") {
-          window.abrirUltimoManuscrito();
-        } else {
-          mostrarTela("biblioteca");
+    // 1. Elementos Interativos do Cenário (Desktop e Mobile)
+    function ligarClique(ids, handler) {
+      ids.forEach(function (id) {
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener("click", handler);
+          el.addEventListener("keydown", function (e) {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              handler();
+            }
+          });
         }
       });
     }
 
-    const cardImersivo = document.getElementById("cardImersivo");
-    if (cardImersivo) {
-      cardImersivo.addEventListener("click", function () {
-        alternarModoZen();
-      });
-    }
+    // Orbe 1: A Estante
+    ligarClique(["cardEstante", "cardEstanteMobile"], function () {
+      mostrarTela("biblioteca");
+    });
+
+    // Orbe 2: Manuscritos
+    ligarClique(["cardManuscritos", "cardManuscritosMobile"], function () {
+      if (typeof window.abrirUltimoManuscrito === "function") {
+        window.abrirUltimoManuscrito();
+      } else {
+        mostrarTela("biblioteca");
+      }
+    });
+
+    // Orbe 3: Modo Imersivo
+    ligarClique(["cardImersivo", "cardImersivoMobile"], function () {
+      alternarModoZen();
+    });
+
+    // Pergaminho: Manifesto Eterno
+    ligarClique(["cenarioPergaminho", "cenarioPergaminhoMobile"], function () {
+      abrirModal("modal-manifesto");
+    });
+
+    // Livro Aberto: Manuscrito
+    ligarClique(["cenarioLivroAberto", "cenarioLivroAbertoMobile"], function () {
+      if (typeof window.abrirUltimoManuscrito === "function") {
+        window.abrirUltimoManuscrito();
+      } else {
+        mostrarTela("biblioteca");
+      }
+    });
 
     // Botões de Retorno
     const btnVoltarBiblioteca = document.getElementById("btn-voltar-biblioteca");
