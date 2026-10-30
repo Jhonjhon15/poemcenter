@@ -1,0 +1,374 @@
+/* ==========================================================================
+   PoemCenter — Componentes (Dashboard Lateral, Barra Apple Mobile, Modais)
+   ========================================================================== */
+
+/* Layout Principal do Dashboard */
+.layout-dashboard {
+  display: flex;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* 1. Dashboard Lateral Expandido (Desktop) */
+.dashboard-sidebar {
+  width: 270px;
+  background-color: var(--cor-fundo-sidebar);
+  border-right: 1px solid var(--cor-linha);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  z-index: 100;
+  transition: width var(--transicao-media), transform var(--transicao-media);
+}
+
+.dashboard-sidebar-header {
+  padding: 24px 20px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--cor-linha);
+}
+
+.dashboard-logo {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 12px rgba(201, 162, 39, 0.3));
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.dashboard-logo:hover {
+  transform: scale(1.08) rotate(-4deg);
+}
+
+.dashboard-titulo-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-marca {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-style: italic;
+  font-weight: 600;
+  color: var(--cor-acento-forte);
+  letter-spacing: 0.5px;
+  line-height: 1.1;
+}
+
+.dashboard-submarca {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--cor-texto-fraco);
+  margin-top: 3px;
+}
+
+.dashboard-nav-conteudo {
+  padding: 18px 14px;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.secao-titulo {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--cor-texto-fraco);
+  margin-top: 18px;
+  margin-bottom: 6px;
+  padding: 0 8px;
+}
+
+.item-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 12px;
+  color: var(--cor-texto-suave);
+  text-decoration: none;
+  font-size: 13.5px;
+  border-radius: var(--raio-suave);
+  cursor: pointer;
+  transition: background var(--transicao-rapida), color var(--transicao-rapida), transform var(--transicao-rapida);
+  user-select: none;
+}
+
+.item-nav:hover {
+  background: rgba(201, 162, 39, 0.1);
+  color: var(--cor-acento-forte);
+}
+
+.item-nav.ativo {
+  background: rgba(201, 162, 39, 0.16);
+  color: var(--cor-acento-forte);
+  font-weight: 500;
+}
+
+.item-nav .icone-svg {
+  width: 18px;
+  height: 18px;
+  color: var(--cor-acento);
+}
+
+/* Seletor Compacto de Temas na Sidebar */
+.sidebar-tema-box {
+  padding: 8px;
+}
+
+.sidebar-select-tema {
+  width: 100%;
+  background: var(--cor-card-bg);
+  border: 1px solid var(--cor-linha-forte);
+  color: var(--cor-texto);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.sidebar-select-tema:focus {
+  border-color: var(--cor-acento);
+}
+
+.dashboard-sidebar-footer {
+  padding: 14px 16px;
+  border-top: 1px solid var(--cor-linha);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Área de Conteúdo do Dashboard */
+.dashboard-conteudo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 2. Barra Inferior Estilo Apple (Mobile < 769px) */
+.dashboard-mobile-bar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .layout-dashboard {
+    flex-direction: column;
+  }
+
+  /* Oculta a sidebar desktop padrão em mobile */
+  .dashboard-sidebar {
+    display: none;
+  }
+
+  /* Exibe a barra inferior estilo Apple */
+  .dashboard-mobile-bar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: rgba(20, 16, 23, 0.94);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--cor-linha);
+    z-index: 1000;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 8px;
+    padding-bottom: max(4px, env(safe-area-inset-bottom));
+  }
+
+  .mobile-tab-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    height: 100%;
+    color: var(--cor-texto-fraco);
+    text-decoration: none;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    gap: 4px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 6px 0;
+    transition: color 0.15s ease, transform 0.15s ease;
+  }
+
+  .mobile-tab-item .icone-svg {
+    width: 22px;
+    height: 22px;
+    color: currentColor;
+  }
+
+  .mobile-tab-item.ativo {
+    color: var(--cor-acento-forte);
+  }
+
+  .mobile-tab-item:active {
+    transform: scale(0.92);
+  }
+
+  /* Espaço de respiro para a barra inferior no mobile */
+  .dashboard-conteudo {
+    padding-bottom: 74px;
+  }
+}
+
+/* Modais Universais (Manifesto / Sobre o Autor / Ajustes Mobile) */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.78);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transicao-media), visibility var(--transicao-media);
+}
+
+.modal-overlay.ativo {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-card {
+  background: var(--cor-fundo-editor);
+  border: 1px solid var(--cor-linha-forte);
+  border-radius: var(--raio-card);
+  width: 100%;
+  max-width: 560px;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 36px 30px;
+  position: relative;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+  transform: translateY(16px);
+  transition: transform var(--transicao-media) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-overlay.ativo .modal-card {
+  transform: translateY(0);
+}
+
+.modal-fechar {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  color: var(--cor-texto-suave);
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-size: 22px;
+}
+
+.modal-fechar:hover {
+  color: var(--cor-acento-forte);
+}
+
+.modal-titulo {
+  font-family: var(--font-display);
+  font-size: 26px;
+  color: var(--cor-acento-forte);
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.modal-corpo {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--cor-texto);
+}
+
+.modal-corpo p {
+  margin-bottom: 14px;
+}
+
+/* Botões Globais */
+.btn-primario, .btn-secundario, .btn-perigo, .btn-tema {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: var(--raio-suave);
+  cursor: pointer;
+  transition: all var(--transicao-rapida);
+  text-decoration: none;
+}
+
+.btn-primario {
+  background: linear-gradient(135deg, var(--cor-acento), #9a7615);
+  color: #161108;
+  font-weight: 600;
+  border: 1px solid var(--cor-acento-forte);
+  box-shadow: 0 4px 14px rgba(201, 162, 39, 0.2);
+}
+
+.btn-primario:hover {
+  background: linear-gradient(135deg, var(--cor-acento-forte), var(--cor-acento));
+  box-shadow: 0 6px 18px rgba(201, 162, 39, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-secundario {
+  background: rgba(201, 162, 39, 0.08);
+  border: 1px solid var(--cor-linha-forte);
+  color: var(--cor-texto);
+}
+
+.btn-secundario:hover {
+  background: rgba(201, 162, 39, 0.16);
+  border-color: var(--cor-acento);
+  color: var(--cor-acento-forte);
+  transform: translateY(-1px);
+}
+
+.btn-tema {
+  background: var(--cor-card-bg);
+  border: 1px solid var(--cor-linha);
+  color: var(--cor-texto-suave);
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 6px;
+}
+
+.btn-tema:hover {
+  border-color: var(--cor-acento);
+  color: var(--cor-acento-forte);
+}
+
+.btn-perigo {
+  background: rgba(196, 85, 85, 0.15);
+  border: 1px solid rgba(196, 85, 85, 0.4);
+  color: var(--cor-perigo);
+}
+
+.btn-perigo:hover {
+  background: var(--cor-perigo);
+  color: #fff;
+}

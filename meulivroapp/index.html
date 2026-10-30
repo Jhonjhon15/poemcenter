@@ -1,18 +1,227 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0a0806" />
-  <meta name="description" content="PoemCenter — Um santuário de poesias autorais. Escreva, guarde e compartilhe seus versos." />
-  <title>PoemCenter — Santuário de Poesias</title>
-  <link rel="icon" type="image/png" href="/favicon.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#120f14">
+  <meta name="description" content="PoemCenter — Santuário de poesias autorais. Escreva, guarde e contemple seus versos.">
+  <title>PoemCenter — Santuário dos Versos</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="shortcut icon" href="favicon.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="root"></div>
-  <script type="module" src="/src/main.tsx"></script>
+
+  <!-- Navegação Principal -->
+  <header class="landing-header" id="landingHeader">
+    <nav class="landing-nav">
+      <a href="#inicio" class="landing-marca">
+        <img src="logo.png" alt="PoemCenter" class="landing-marca-logo">
+        <span class="landing-marca-nome">PoemCenter</span>
+      </a>
+
+      <ul class="landing-menu-links">
+        <li><a href="#inicio" class="landing-link">Início</a></li>
+        <li><a href="#estante" class="landing-link">Estante</a></li>
+        <li><a href="atmosfera.html" class="landing-link">Atmosfera</a></li>
+        <li><a href="#manifesto" class="landing-link">Manifesto</a></li>
+      </ul>
+
+      <a href="home.html" class="btn-entrar-nav">Entrar no Santuário</a>
+
+      <button class="btn-mobile-toggle" id="btnMobileToggle" aria-label="Abrir Menu">
+        <span class="icone-svg">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="4" y1="12" x2="20" y2="12"></line>
+            <line x1="4" y1="6" x2="20" y2="6"></line>
+            <line x1="4" y1="18" x2="20" y2="18"></line>
+          </svg>
+        </span>
+      </button>
+    </nav>
+
+    <!-- Menu Mobile Dropdown -->
+    <div class="landing-mobile-menu" id="landingMobileMenu">
+      <a href="#inicio" class="landing-link">Início</a>
+      <a href="#estante" class="landing-link">Estante</a>
+      <a href="atmosfera.html" class="landing-link">Atmosfera</a>
+      <a href="#manifesto" class="landing-link">Manifesto</a>
+      <a href="home.html" class="btn-primario" style="margin-top: 8px;">Entrar no Santuário</a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main>
+    <section class="landing-hero" id="inicio">
+      <div class="hero-ornamento">❧</div>
+      <img src="logo.png" alt="PoemCenter" class="hero-logo">
+
+      <h1 class="hero-titulo">O Santuário dos Versos</h1>
+
+      <p class="hero-subtitulo">
+        &ldquo;Escrevo porque descobri que algumas partes de mim só sabem existir em palavras.&rdquo;
+      </p>
+
+      <div class="hero-divisor">
+        <span class="hero-linha"></span>
+        <span class="hero-tag">Poesia Autoral</span>
+        <span class="hero-linha reversa"></span>
+      </div>
+
+      <div class="hero-acoes">
+        <a href="home.html" class="btn-hero-cta">Entrar no Santuário</a>
+        <a href="#estante" class="btn-hero-explorar">Explorar a Estante</a>
+      </div>
+    </section>
+
+    <!-- Seção Estante -->
+    <section class="landing-secao" id="estante">
+      <div class="secao-topo">
+        <span class="ornamento" style="font-size: 28px; display: block; margin-bottom: 8px;">❧</span>
+        <h2 class="secao-titulo-destaque">Prévias da Estante</h2>
+        <p class="secao-desc">
+          Fragmentos que repousam no santuário — uma amostra do que aguarda entre as páginas.
+        </p>
+      </div>
+
+      <div class="landing-cards-grid">
+        <article class="landing-card-poema">
+          <div class="landing-card-topo">
+            <span class="ornamento">❧</span>
+            <span class="landing-card-parte">Parte I</span>
+          </div>
+          <h3 class="landing-card-titulo">Entre Versos e Silêncios</h3>
+          <p class="landing-card-trecho">
+            &ldquo;Há palavras que não ousam sair — dormem entre as linhas como quem espera a manhã...&rdquo;
+          </p>
+          <div class="landing-card-rodape">
+            <span style="color: var(--cor-acento);">✦</span> Jhonatan Mendes
+          </div>
+        </article>
+
+        <article class="landing-card-poema">
+          <div class="landing-card-topo">
+            <span class="ornamento">❧</span>
+            <span class="landing-card-parte">Parte II</span>
+          </div>
+          <h3 class="landing-card-titulo">O Último Romântico</h3>
+          <p class="landing-card-trecho">
+            &ldquo;E se eu te dissesse que a noite também tem medo do escuro, mas canta mesmo assim?&rdquo;
+          </p>
+          <div class="landing-card-rodape">
+            <span style="color: var(--cor-acento);">✦</span> Jhonatan Mendes
+          </div>
+        </article>
+
+        <article class="landing-card-poema">
+          <div class="landing-card-topo">
+            <span class="ornamento">❧</span>
+            <span class="landing-card-parte">Parte III</span>
+          </div>
+          <h3 class="landing-card-titulo">Carta ao Vento</h3>
+          <p class="landing-card-trecho">
+            &ldquo;Escrevi teu nome em todas as línguas que o silêncio conhece — e o vento as levou todas.&rdquo;
+          </p>
+          <div class="landing-card-rodape">
+            <span style="color: var(--cor-acento);">✦</span> Jhonatan Mendes
+          </div>
+        </article>
+
+        <article class="landing-card-poema">
+          <div class="landing-card-topo">
+            <span class="ornamento">❧</span>
+            <span class="landing-card-parte">Parte IV</span>
+          </div>
+          <h3 class="landing-card-titulo">A Vela e a Sombra</h3>
+          <p class="landing-card-trecho">
+            &ldquo;A chama não pergunta se vale a pena queimar — apenas arde, e ilumina o que pode.&rdquo;
+          </p>
+          <div class="landing-card-rodape">
+            <span style="color: var(--cor-acento);">✦</span> Jhonatan Mendes
+          </div>
+        </article>
+
+        <article class="landing-card-poema">
+          <div class="landing-card-topo">
+            <span class="ornamento">❧</span>
+            <span class="landing-card-parte">Parte V</span>
+          </div>
+          <h3 class="landing-card-titulo">Noite de Veludo</h3>
+          <p class="landing-card-trecho">
+            &ldquo;Deito-me sobre o escuro como quem se cobre com um manto — e o manto me aquece de estrelas.&rdquo;
+          </p>
+          <div class="landing-card-rodape">
+            <span style="color: var(--cor-acento);">✦</span> Jhonatan Mendes
+          </div>
+        </article>
+
+        <article class="landing-card-poema">
+          <div class="landing-card-topo">
+            <span class="ornamento">❧</span>
+            <span class="landing-card-parte">Parte VI</span>
+          </div>
+          <h3 class="landing-card-titulo">O Vinil e a Saudade</h3>
+          <p class="landing-card-trecho">
+            &ldquo;A música gira no toca-discos da memória — e eu danço sozinho com quem já partiu.&rdquo;
+          </p>
+          <div class="landing-card-rodape">
+            <span style="color: var(--cor-acento);">✦</span> Jhonatan Mendes
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Seção Manifesto -->
+    <section class="landing-secao" id="manifesto">
+      <div class="landing-manifesto-wrap">
+        <span class="ornamento" style="font-size: 32px; display: block; margin-bottom: 12px;">❧</span>
+        <h2 class="secao-titulo-destaque">O Manifesto do Santuário</h2>
+        <p class="manifesto-texto">
+          Acreditamos que a poesia não é feita para o barulho dos feeds nem para a pressa dos ponteiros.
+          Ela existe no intervalo, no suspiro, na luz trêmula de uma vela que teima em clarear o peito.
+          O PoemCenter é a morada daqueles que ainda acreditam no poder da palavra bem cuidada.
+        </p>
+        <a href="home.html" class="btn-primario">Escrever no Santuário</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Rodapé -->
+  <footer class="landing-footer">
+    <span class="ornamento" style="font-size: 24px; display: block; margin-bottom: 12px;">❧</span>
+    <p class="footer-frase">&ldquo;Toda página em branco é um convite.&rdquo;</p>
+    <p class="footer-copy">PoemCenter &middot; 2026</p>
+  </footer>
+
+  <!-- Scripts padrão (compatíveis com file:/// e HTTP) -->
+  <script src="./js/theme.js"></script>
+  <script>
+    (function () {
+      const header = document.getElementById('landingHeader');
+      window.addEventListener('scroll', function () {
+        if (window.scrollY > 20) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+      }, { passive: true });
+
+      const btnToggle = document.getElementById('btnMobileToggle');
+      const menuMobile = document.getElementById('landingMobileMenu');
+      if (btnToggle && menuMobile) {
+        btnToggle.addEventListener('click', function () {
+          menuMobile.classList.toggle('ativo');
+        });
+        menuMobile.querySelectorAll('a').forEach(function (link) {
+          link.addEventListener('click', function () {
+            menuMobile.classList.remove('ativo');
+          });
+        });
+      }
+    })();
+  </script>
 </body>
 </html>

@@ -3,430 +3,471 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PoemCenter - Editor</title>
+  <meta name="theme-color" content="#120f14">
+  <title>PoemCenter — Editor & Estante</title>
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="shortcut icon" href="favicon.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-
-    .btn-hamburguer-flutuante {
-        position: fixed !important;
-        top: 20px !important;
-        left: 20px !important;
-        z-index: 2147483647 !important; 
-        background: var(--card-bg, #1a1a1e) !important;
-        border: 1px solid var(--border-color, rgba(212, 175, 55, 0.4)) !important;
-        color: var(--accent-gold, #d4af37) !important;
-        font-size: 20px !important;
-        width: 42px !important;
-        height: 42px !important;
-        border-radius: 8px !important;
-        cursor: pointer !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-        padding: 0 !important;
-        transition: opacity 0.25s ease, visibility 0.25s ease, transform 0.2s ease, border-color 0.2s ease;
-    }
-
-    .btn-hamburguer-flutuante:hover {
-        transform: scale(1.05);
-        border-color: #d4af37 !important;
-    }
-
-    .menu-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.6);
-        backdrop-filter: blur(3px);
-        z-index: 2147483645;
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.3s ease, visibility 0.3s ease;
-    }
-    .menu-overlay.ativo {
-        opacity: 1;
-        visibility: visible;
-    }
-
-    .menu-gaveta {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 300px;
-        height: 100vh;
-        background-color: var(--cor-fundo-sidebar, #141417);
-        color: #e0e0e0;
-        box-shadow: 5px 0 25px rgba(0, 0, 0, 0.7);
-        z-index: 2147483646;
-        transform: translateX(-100%);
-        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-        display: flex;
-        flex-direction: column;
-        overflow-y: auto;
-    }
-    .menu-gaveta.ativo {
-        transform: translateX(0);
-    }
-
-    .menu-cabecalho {
-        padding: 22px 25px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        border-bottom: 1px solid rgba(212, 175, 55, 0.2) !important;
-        background-color: transparent !important;
-    }
-
-    .menu-titulo-interno {
-        font-family: 'Cormorant Garamond', serif !important;
-        font-size: 18px !important;
-        color: #d4af37 !important;
-        letter-spacing: 1.5px !important;
-        font-weight: 600 !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-
-    .btn-fechar-menu {
-        background: transparent !important;
-        border: none !important;
-        color: #d4af37 !important;
-        font-size: 26px !important;
-        cursor: pointer !important;
-        padding: 0 !important;
-        line-height: 1 !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        transition: transform 0.2s ease;
-    }
-    .btn-fechar-menu:hover {
-        transform: scale(1.1);
-    }
-
-    .menu-nav-conteudo {
-        padding: 15px 20px;
-        overflow-y: auto;
-        flex-grow: 1;
-    }
-    .menu-nav-conteudo .secao-titulo {
-        font-size: 11px;
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
-        color: #888;
-        margin-top: 18px;
-        margin-bottom: 8px;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
-        padding-bottom: 4px;
-    }
-    
-    .item-nav {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 8px 10px;
-        color: #ccc;
-        text-decoration: none;
-        font-size: 14px;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background 0.2s, color 0.2s;
-        margin-bottom: 2px;
-    }
-    .item-nav:hover {
-        background: rgba(212, 175, 55, 0.1);
-        color: #d4af37;
-    }
-    .item-nav-icone {
-        color: #d4af37;
-    }
-
-    .submenu-temas {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s ease-in-out;
-        padding-left: 15px;
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-    }
-    .submenu-temas.ativo {
-        max-height: 350px;
-        margin-top: 6px;
-        margin-bottom: 6px;
-    }
-    .subitem-tema {
-        font-size: 13px;
-        color: #aaa;
-        padding: 5px 8px;
-        border-radius: 4px;
-        cursor: pointer;
-        text-decoration: none;
-        transition: color 0.2s, background 0.2s;
-    }
-    .subitem-tema:hover {
-        color: #d4af37;
-        background: rgba(212, 175, 55, 0.05);
-    }
-    .tela-inicio {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-between;
-        min-height: 100vh;
-        text-align: center;
-        padding: 40px 20px 30px 20px;
-        background: linear-gradient(rgba(13, 13, 15, 0.82), rgba(8, 8, 10, 0.88)), url('fundo-escrivaninha.jpg');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        overflow-x: hidden;
-    }
-
-    .conteudo-central-inicio {
-        margin-top: auto;
-        margin-bottom: auto;
-    }
-
-    .cards-container-inicio {
-        display: flex;
-        gap: 15px;
-        justify-content: center;
-        flex-wrap: wrap;
-        width: 100%;
-        max-width: 900px;
-        margin-top: 20px;
-    }
-
-    .card-inicio-personalizado {
-        background: rgba(25, 25, 28, 0.6);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(212, 175, 55, 0.3);
-        padding: 16px 20px;
-        border-radius: 12px;
-        width: 270px;
-        text-align: left;
-        cursor: pointer;
-        transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-    }
-
-    .card-inicio-personalizado:hover {
-        transform: translateY(-3px);
-        border-color: rgba(212, 175, 55, 0.7);
-        background: rgba(30, 30, 35, 0.75);
-    }
-    .tela-biblioteca { display: none; padding: 40px 20px; }
-    .app.escondido { display: none; }
-    .escondido { display: none !important; }
-  </style>
 </head>
 <body>
 
-<button id="btnMenu" class="btn-hamburguer-flutuante" title="Menu Poêmico">☰</button>
+  <div class="layout-dashboard">
 
-<div id="menuOverlay" class="menu-overlay"></div>
+    <!-- 1. Dashboard Lateral Expandido (Desktop) -->
+    <aside class="dashboard-sidebar" id="dashboardSidebar">
+      <div class="dashboard-sidebar-header">
+        <img src="logo.png" alt="PoemCenter" class="dashboard-logo">
+        <div class="dashboard-titulo-box">
+          <span class="dashboard-marca">PoemCenter</span>
+          <span class="dashboard-submarca">Santuário Literário</span>
+        </div>
+      </div>
 
-<aside id="menuGaveta" class="menu-gaveta">
-    <div class="menu-cabecalho">
-        <span class="menu-titulo-interno">MENU POÊMICO</span>
-        <button id="btnFecharMenu" class="btn-fechar-menu">&times;</button>
+      <nav class="dashboard-nav-conteudo">
+        <div class="secao-titulo">Navegação Principal</div>
+
+        <a class="item-nav ativo" data-nav="inicio">
+          <span class="icone-svg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </span>
+          Início
+        </a>
+
+        <a class="item-nav" data-nav="biblioteca">
+          <span class="icone-svg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 2v20"/></svg>
+          </span>
+          Estante Poética
+        </a>
+
+        <a href="atmosfera.html" class="item-nav">
+          <span class="icone-svg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+          </span>
+          Atmosfera Poética
+        </a>
+
+        <a href="atmosfera.html#pensamentos" class="item-nav">
+          <span class="icone-svg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg>
+          </span>
+          Pensamentos Diários
+        </a>
+
+        <div class="secao-titulo">Personalização</div>
+        <div class="sidebar-tema-box">
+          <select id="select-tema-lateral" class="sidebar-select-tema">
+            <option value="noite">❧ Noite de Veludo</option>
+            <option value="livro">❧ Papel Envelhecido</option>
+            <option value="floresta">❧ Floresta Silenciosa</option>
+            <option value="nevoa">❧ Névoa da Manhã</option>
+            <option value="crepusculo">❧ Crepúsculo Vinho</option>
+            <option value="azul">❧ Azul Marinho Real</option>
+            <option value="cobre">❧ Deserto de Cobre</option>
+            <option value="sol">❧ Sol da Meia-Noite</option>
+            <option value="infinito">✦ Caos Infinito</option>
+          </select>
+        </div>
+
+        <div class="secao-titulo">Ajustes & Foco</div>
+        <a class="item-nav" data-acao="zen">
+          <span class="icone-svg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          </span>
+          Modo Zen
+        </a>
+
+        <a class="item-nav" data-acao="fonte">
+          <span class="icone-svg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+          </span>
+          Tamanho da Fonte (A+)
+        </a>
+
+        <div class="secao-titulo">Sobre & Manifesto</div>
+        <a class="item-nav" data-acao="autor">
+          <span class="icone-svg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </span>
+          Sobre o Autor
+        </a>
+
+        <a class="item-nav" data-acao="manifesto">
+          <span class="icone-svg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17V5a2 2 0 0 0-2-2H4"/><path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v2a2 2 0 0 0 2 2z"/><path d="M4 17h13"/><path d="M4 5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5z"/></svg>
+          </span>
+          Manifesto
+        </a>
+      </nav>
+
+      <div class="dashboard-sidebar-footer">
+        <a href="index.html" class="btn-secundario" style="text-align: center; font-size: 12px;">← Voltar ao Santuário</a>
+      </div>
+    </aside>
+
+    <!-- Área Principal de Conteúdo -->
+    <div class="dashboard-conteudo">
+
+      <!-- 1. Tela Inicial — Cenário Interativo Edge-to-Edge -->
+      <section class="tela-inicio" id="tela-inicio">
+
+        <!-- SVG Interativo DESKTOP (1024 x 576) -->
+        <svg class="cenario-svg-desktop" viewBox="0 0 1024 576" preserveAspectRatio="xMidYMid slice">
+          <!-- Imagem de Fundo Completa da Mesa -->
+          <image href="assets/cenario-mesa.jpg" x="0" y="0" width="1024" height="576" />
+
+          <!-- Pergaminho Interativo: Manifesto -->
+          <g id="cenarioPergaminho" class="svg-clicavel" role="button" tabindex="0">
+            <rect x="84" y="176" width="216" height="172" rx="10" fill="#ffd700" class="svg-pergaminho-bg" />
+            <text x="192" y="218" class="svg-pergaminho-titulo">Manifesto Eterno</text>
+            <text x="192" y="238" class="svg-pergaminho-divisor">❧</text>
+            <text x="192" y="262" class="svg-pergaminho-texto">PoemCenter é um refúgio</text>
+            <text x="192" y="280" class="svg-pergaminho-texto">para mentes livres...</text>
+            <text x="192" y="312" class="svg-pergaminho-subtexto">“Aqui as palavras ganham vida.”</text>
+          </g>
+
+          <!-- Livro Aberto Central: Manuscrito -->
+          <g id="cenarioLivroAberto" class="svg-clicavel" role="button" tabindex="0">
+            <rect x="306" y="306" width="392" height="130" rx="12" fill="#ffd700" class="svg-livro-bg" />
+            <!-- Página Esquerda -->
+            <text x="402" y="354" class="svg-livro-verso">Há palavras que dormem</text>
+            <text x="402" y="372" class="svg-livro-verso">entre as linhas esperando</text>
+            <text x="402" y="390" class="svg-livro-verso">a manhã do leitor.</text>
+            <!-- Página Direita -->
+            <text x="596" y="358" class="svg-livro-destaque">Aqui, a alma</text>
+            <text x="596" y="378" class="svg-livro-destaque">fica em silêncio.</text>
+            <text x="596" y="408" class="svg-livro-assinatura">❧ PoemCenter</text>
+          </g>
+
+          <!-- Orbe 1: A Estante -->
+          <g id="cardEstante" class="svg-clicavel" role="button" tabindex="0">
+            <circle cx="650" cy="228" r="48" fill="rgba(227,199,120,0.18)" stroke="#ffd700" stroke-width="2" class="svg-orbe-glow" />
+            <circle cx="650" cy="228" r="48" fill="transparent" />
+            <rect x="596" y="278" width="108" height="26" rx="4" fill="rgba(10,8,12,0.6)" />
+            <text x="650" y="296" class="svg-orbe-rotulo">A Estante</text>
+          </g>
+
+          <!-- Orbe 2: Últimos Manuscritos -->
+          <g id="cardManuscritos" class="svg-clicavel" role="button" tabindex="0">
+            <circle cx="752" cy="250" r="48" fill="rgba(227,199,120,0.18)" stroke="#ffd700" stroke-width="2" class="svg-orbe-glow" />
+            <circle cx="752" cy="250" r="48" fill="transparent" />
+            <rect x="694" y="302" width="116" height="26" rx="4" fill="rgba(10,8,12,0.6)" />
+            <text x="752" y="320" class="svg-orbe-rotulo">Manuscritos</text>
+          </g>
+
+          <!-- Orbe 3: Modo Imersivo -->
+          <g id="cardImersivo" class="svg-clicavel" role="button" tabindex="0">
+            <circle cx="868" cy="280" r="50" fill="rgba(227,199,120,0.18)" stroke="#ffd700" stroke-width="2" class="svg-orbe-glow" />
+            <circle cx="868" cy="280" r="50" fill="transparent" />
+            <rect x="812" y="336" width="112" height="26" rx="4" fill="rgba(10,8,12,0.6)" />
+            <text x="868" y="354" class="svg-orbe-rotulo">Modo Imersivo</text>
+          </g>
+        </svg>
+
+        <!-- SVG Interativo MOBILE (576 x 1024) -->
+        <svg class="cenario-svg-mobile" viewBox="0 0 576 1024" preserveAspectRatio="xMidYMid slice">
+          <!-- Imagem Vertical de Fundo -->
+          <image href="assets/cenario-mesa-mobile.jpg" x="0" y="0" width="576" height="1024" />
+
+          <!-- Pergaminho Interativo Mobile -->
+          <g id="cenarioPergaminhoMobile" class="svg-clicavel" role="button" tabindex="0">
+            <rect x="22" y="430" width="196" height="168" rx="8" fill="#ffd700" class="svg-pergaminho-bg" />
+            <text x="120" y="482" class="svg-pergaminho-titulo" font-size="14">Manifesto</text>
+            <text x="120" y="506" class="svg-pergaminho-texto" font-size="11">PoemCenter</text>
+            <text x="120" y="528" class="svg-pergaminho-subtexto" font-size="10">Refúgio de mentes livres</text>
+          </g>
+
+          <!-- Livro Aberto Central Mobile -->
+          <g id="cenarioLivroAbertoMobile" class="svg-clicavel" role="button" tabindex="0">
+            <rect x="60" y="586" width="418" height="150" rx="10" fill="#ffd700" class="svg-livro-bg" />
+            <text x="156" y="642" class="svg-livro-verso" font-size="11">Há palavras que</text>
+            <text x="156" y="658" class="svg-livro-verso" font-size="11">dormem nas linhas...</text>
+            <text x="366" y="642" class="svg-livro-destaque" font-size="13">Aqui, a alma</text>
+            <text x="366" y="660" class="svg-livro-destaque" font-size="13">fica em silêncio.</text>
+          </g>
+
+          <!-- Orbe 1 Mobile -->
+          <g id="cardEstanteMobile" class="svg-clicavel" role="button" tabindex="0">
+            <circle cx="310" cy="456" r="38" fill="rgba(227,199,120,0.18)" stroke="#ffd700" stroke-width="2" class="svg-orbe-glow" />
+            <circle cx="310" cy="456" r="38" fill="transparent" />
+            <text x="310" y="512" class="svg-orbe-rotulo" font-size="12">A Estante</text>
+          </g>
+
+          <!-- Orbe 2 Mobile -->
+          <g id="cardManuscritosMobile" class="svg-clicavel" role="button" tabindex="0">
+            <circle cx="394" cy="478" r="38" fill="rgba(227,199,120,0.18)" stroke="#ffd700" stroke-width="2" class="svg-orbe-glow" />
+            <circle cx="394" cy="478" r="38" fill="transparent" />
+            <text x="394" y="534" class="svg-orbe-rotulo" font-size="12">Manuscritos</text>
+          </g>
+
+          <!-- Orbe 3 Mobile -->
+          <g id="cardImersivoMobile" class="svg-clicavel" role="button" tabindex="0">
+            <circle cx="484" cy="502" r="40" fill="rgba(227,199,120,0.18)" stroke="#ffd700" stroke-width="2" class="svg-orbe-glow" />
+            <circle cx="484" cy="502" r="40" fill="transparent" />
+            <text x="484" y="560" class="svg-orbe-rotulo" font-size="12">Imersivo</text>
+          </g>
+        </svg>
+
+      </section>
+
+      <!-- 2. Tela Biblioteca / Estante -->
+      <section class="tela-biblioteca escondido" id="tela-biblioteca">
+        <header class="biblioteca-header">
+          <h2>Estante Poética</h2>
+          <p>Seus livros e manuscritos guardados no santuário.</p>
+          
+          <div class="biblioteca-acoes-topo">
+            <select id="select-tema-estante" class="btn-tema" title="Selecionar Tema">
+              <option value="noite">❧ Noite de Veludo</option>
+              <option value="livro">❧ Papel Envelhecido</option>
+              <option value="floresta">❧ Floresta Silenciosa</option>
+              <option value="nevoa">❧ Névoa da Manhã</option>
+              <option value="crepusculo">❧ Crepúsculo Vinho</option>
+              <option value="azul">❧ Azul Marinho Real</option>
+              <option value="cobre">❧ Deserto de Cobre</option>
+              <option value="sol">❧ Sol da Meia-Noite</option>
+              <option value="infinito">✦ Caos Infinito</option>
+            </select>
+            <a href="atmosfera.html" class="btn-secundario">Ouvir Trilha Sonora</a>
+            <button id="btn-voltar-inicio" class="btn-secundario">← Início</button>
+          </div>
+        </header>
+
+        <div class="estante" id="estante"></div>
+      </section>
+
+      <!-- 3. Tela Livro & Editor de Poemas -->
+      <section class="tela-editor-livro escondido" id="tela-livro">
+        <!-- Sidebar Interna do Editor -->
+        <aside class="editor-sidebar-interna">
+          <button id="btn-voltar-biblioteca" class="link-voltar">
+            <span class="icone-svg">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            </span>
+            ← Voltar para a Estante
+          </button>
+
+          <header class="livro-header">
+            <h1 class="livro-titulo" id="livro-titulo-sidebar">Título do livro</h1>
+            <p class="livro-subtitulo">manuscrito pessoal &middot; pré-lançamento</p>
+          </header>
+
+          <div class="sidebar-stats" id="sidebar-stats">
+            <div class="stat">
+              <span class="stat-num" id="stat-partes">0</span>
+              <span class="stat-label">partes</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num" id="stat-poemas">0</span>
+              <span class="stat-label">poemas</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num" id="stat-palavras">0</span>
+              <span class="stat-label">palavras</span>
+            </div>
+          </div>
+
+          <nav class="lista-wrap">
+            <div class="item-nav" data-tipo="capa" tabindex="0">
+              <span class="ornamento">❧</span> Capa
+            </div>
+            <div class="item-nav" data-tipo="sumario" tabindex="0">
+              <span class="ornamento">‖</span> Sumário
+            </div>
+
+            <div class="secao-titulo">Partes do livro</div>
+            <div id="partes-wrap"></div>
+
+            <div class="item-nav" data-tipo="notafinal" tabindex="0">
+              <span class="ornamento">❧</span> Nota final
+            </div>
+            <div class="item-nav" data-tipo="sobreautor" tabindex="0">
+              <span class="ornamento">❧</span> Sobre o autor
+            </div>
+          </nav>
+
+          <div class="sidebar-actions">
+            <button id="btn-nova-parte" class="btn-secundario">+ Nova parte</button>
+            <button id="btn-exportar-tudo" class="btn-primario">Exportar manuscrito (.txt)</button>
+          </div>
+        </aside>
+
+        <!-- Painéis de Conteúdo -->
+        <main class="editor">
+          <!-- Capa -->
+          <section class="painel painel-capa" id="painel-capa">
+            <div class="pagina-capa">
+              <span class="cesura-grande">❧</span>
+              <input type="text" id="capa-titulo" class="capa-titulo-input" placeholder="Título do livro">
+              <input type="text" id="capa-subtitulo" class="capa-subtitulo-input" placeholder="Subtítulo (opcional)">
+              <input type="text" id="capa-autor" class="capa-autor-input" placeholder="Nome do autor ou autora">
+              <input type="text" id="capa-epiteto" class="capa-epiteto-input" placeholder="Conhecido(a) como... (opcional)">
+              <textarea id="capa-dedicatoria" class="capa-dedicatoria-input" placeholder="Dedicatória (opcional) — ex: para quem me ensinou o silêncio..." rows="2"></textarea>
+            </div>
+          </section>
+
+          <!-- Sumário -->
+          <section class="painel painel-sumario" id="painel-sumario">
+            <div class="sumario-topo">
+              <h2>Sumário</h2>
+              <p class="sumario-dica">Clique em qualquer item para ir direto até ele.</p>
+            </div>
+            <div class="sumario-conteudo" id="sumario-conteudo"></div>
+          </section>
+
+          <!-- Poema -->
+          <section class="painel painel-poema" id="painel-poema">
+            <div class="estado-vazio" id="estado-vazio">
+              <span class="cesura" style="font-size: 32px; display: block; margin-bottom: 12px;">‖</span>
+              <p>Nenhum poema selecionado.<br>Crie uma parte e comece a escrever.</p>
+            </div>
+
+            <div class="editor-conteudo" id="editor-conteudo">
+              <div class="editor-top">
+                <span class="editor-parte-label" id="editor-parte-label"></span>
+                <input type="text" id="titulo-capitulo" placeholder="Título do poema" autocomplete="off">
+                <div class="editor-meta">
+                  <span class="respiro" id="respiro" title="status de salvamento"></span>
+                  <span id="status-salvamento">tudo salvo</span>
+                  <span class="separador-meta">&middot;</span>
+                  <span id="contador-palavras">0 palavras</span>
+                </div>
+              </div>
+
+              <textarea id="texto-capitulo" placeholder="Comece a escrever aqui seus versos..." spellcheck="true"></textarea>
+
+              <div class="editor-bottom">
+                <button id="btn-excluir" class="btn-perigo">Excluir poema</button>
+                <div class="editor-bottom-direita">
+                  <button id="btn-exportar-poema" class="btn-secundario">Exportar poema</button>
+                  <button id="btn-salvar" class="btn-primario">Salvar</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Nota Final -->
+          <section class="painel painel-notafinal" id="painel-notafinal">
+            <div class="editor-top">
+              <h2>Nota final</h2>
+              <div class="editor-meta">
+                <span class="respiro" id="respiro-nota"></span>
+                <span id="status-salvamento-nota">tudo salvo</span>
+              </div>
+            </div>
+            <textarea id="texto-nota-final" placeholder="Últimas palavras para quem chegou até aqui..." spellcheck="true"></textarea>
+          </section>
+
+          <!-- Sobre o Autor -->
+          <section class="painel painel-sobreautor" id="painel-sobreautor">
+            <div class="editor-top">
+              <h2>Sobre o autor</h2>
+              <div class="editor-meta">
+                <span class="respiro" id="respiro-bio"></span>
+                <span id="status-salvamento-bio">tudo salvo</span>
+              </div>
+            </div>
+            <textarea id="texto-biografia" placeholder="Conte um pouco sobre sua trajetória..." spellcheck="true"></textarea>
+          </section>
+        </main>
+      </section>
+
     </div>
 
-    <nav class="menu-nav-conteudo">
-        <div class="secao-titulo">Navegação Principal</div>
-        <div class="item-nav" data-acao="inicio"><span class="item-nav-icone">🏠</span> Início</div>
-        
-        <div class="item-nav" id="btnToggleEstante" style="justify-content: space-between;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <span class="item-nav-icone">📚</span> Estante Poética
-            </div>
-            <span id="setaEstante" style="font-size: 12px; color: #888; transition: transform 0.3s;">▼</span>
-        </div>
-        
-        <div class="submenu-temas" id="submenuEstante">
-            <a class="subitem-tema" data-acao="biblioteca">❧ Minha Biblioteca (Meus Livros)</a>
-            <a class="subitem-tema" data-acao="favoritos">❧ Favoritos</a>
-        </div>
+    <!-- 2. Barra Inferior Estilo Apple (Mobile) -->
+    <nav class="dashboard-mobile-bar">
+      <button class="mobile-tab-item ativo" data-nav="inicio">
+        <span class="icone-svg">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </span>
+        <span>Início</span>
+      </button>
 
-        <div class="item-nav" data-acao="atmosfera"><span class="item-nav-icone">🎧</span> Atmosfera Poética</div>
-        <div class="item-nav" data-acao="pensamentos"><span class="item-nav-icone">✍️</span> Pensamentos</div>
+      <button class="mobile-tab-item" data-nav="biblioteca">
+        <span class="icone-svg">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 2v20"/></svg>
+        </span>
+        <span>Estante</span>
+      </button>
 
-        <div class="secao-titulo">Personalização & Temas</div>
-        <div class="item-nav" id="btnToggleTemas" style="justify-content: space-between;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <span class="item-nav-icone">🎨</span> Seletor de Temas
-            </div>
-            <span id="setaTema" style="font-size: 12px; color: #888; transition: transform 0.3s;">▼</span>
-        </div>
-        
-        <div class="submenu-temas" id="submenuTemas">
-            <span class="subitem-tema" data-tema="noite">❧ Noite de Veludo</span>
-            <span class="subitem-tema" data-tema="livro">❧ Papel Envelhecido</span>
-            <span class="subitem-tema" data-tema="floresta">❧ Floresta Silenciosa</span>
-            <span class="subitem-tema" data-tema="nevoa">❧ Névoa da Manhã</span>
-            <span class="subitem-tema" data-tema="crepusculo">❧ Crepúsculo Vinho</span>
-            <span class="subitem-tema" data-tema="azul">❧ Azul Marinho Real</span>
-            <span class="subitem-tema" data-tema="cobre">❧ Deserto de Cobre</span>
-            <span class="subitem-tema" data-tema="sol">❧ Sol da Meia-Noite</span>
-            <span class="subitem-tema" data-tema="infinito">❧ Caos Infinito 🌌</span>
-        </div>
+      <a href="atmosfera.html" class="mobile-tab-item">
+        <span class="icone-svg">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+        </span>
+        <span>Atmosfera</span>
+      </a>
 
-        <div class="secao-titulo">Acessibilidade & Ajustes</div>
-        <div class="item-nav" data-acao="fonte"><span class="item-nav-icone">🔠</span> Estilo de Fontes (A+ / A-)</div>
-        <div class="item-nav" data-acao="zen"><span class="item-nav-icone">🌙</span> Modo Zen</div>
-        <div class="item-nav" data-acao="vela"><span class="item-nav-icone">🕯️</span> Vela Virtual</div>
-
-        <div class="secao-titulo">Comunidade & Sobre</div>
-        <div class="item-nav" data-acao="autor"><span class="item-nav-icone">👤</span> Sobre o Autor</div>
-        <div class="item-nav" data-acao="manifesto"><span class="item-nav-icone">📜</span> Manifesto</div>
+      <button class="mobile-tab-item" data-acao="ajustes-mobile">
+        <span class="icone-svg">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="1" fill="currentColor"/><circle cx="17.5" cy="10.5" r="1" fill="currentColor"/><circle cx="8.5" cy="7.5" r="1" fill="currentColor"/><circle cx="6.5" cy="12.5" r="1" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+        </span>
+        <span>Ajustes</span>
+      </button>
     </nav>
 
-    <div style="padding: 15px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; gap: 8px;">
-      <button id="btn-nova-parte" class="btn-secundario" style="width: 100%; padding: 8px; cursor: pointer;">+ Nova parte</button>
-      <button id="btn-preview-livro" class="btn-secundario" style="width: 100%; padding: 8px; cursor: pointer;">Prévia p/ exportar PDF</button>
-      <button id="btn-exportar-tudo" class="btn-primario" style="width: 100%; padding: 8px; cursor: pointer;">Exportar manuscrito (.txt)</button>
+  </div>
+
+  <!-- Modais -->
+  <div class="modal-overlay" id="modal-manifesto">
+    <div class="modal-card">
+      <button class="modal-fechar" aria-label="Fechar">&times;</button>
+      <h3 class="modal-titulo">Manifesto do PoemCenter</h3>
+      <div class="modal-corpo">
+        <p>A escrita é um refúgio num mundo apressado. Não criamos versos para o algoritmo, mas para a eternidade de quem lê com calma.</p>
+        <p>Cada poema é um fragmento de alma guardado para resistir ao tempo. Este santuário existe para preservar sua voz autoral com a dignidade que ela merece.</p>
+      </div>
     </div>
-</aside>
+  </div>
 
-<div class="tela-inicio" id="tela-inicio" style="position: relative; display: flex; flex-direction: column; align-items: center; justify-content: space-between; min-height: 100vh; text-align: center; padding: 40px 20px 25px 20px; background: linear-gradient(rgba(13, 13, 15, 0.82), rgba(8, 8, 10, 0.88)), url('fundo-escrivaninha.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat; overflow-x: hidden;">
-
-    <div></div>
-
-    <div style="margin-top: auto; margin-bottom: auto;">
-        <div style="display: flex; justify-content: center; margin-bottom: 15px;">
-            <img src="logo.png" alt="PoemCenter" style="width: 70px; height: 70px; object-fit: contain;">
-        </div>
-        
-        <h1 style="font-family: 'Cormorant Garamond', serif; font-size: 38px; color: #d4af37; margin-bottom: 10px; letter-spacing: 1px;">PoemCenter</h1>
-
-        <p style="color: #bbb; font-style: italic; font-family: 'Cormorant Garamond', serif; font-size: 16px; max-width: 500px; margin: 0 auto; letter-spacing: 0.5px;">
-            “Escrevo porque descobri que algumas partes de mim só sabem existir em palavras.”
-        </p>
+  <div class="modal-overlay" id="modal-autor">
+    <div class="modal-card">
+      <button class="modal-fechar" aria-label="Fechar">&times;</button>
+      <h3 class="modal-titulo">Sobre o Autor</h3>
+      <div class="modal-corpo">
+        <p><strong>Jhonatan Mendes</strong>, conhecido como <em>"O Último Romântico"</em>.</p>
+        <p>Buscando na poesia o espaço sagrado onde o indizível encontra forma, ritmo e acolhimento.</p>
+      </div>
     </div>
+  </div>
 
-    <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; width: 100%; max-width: 950px; margin-top: 20px;">
-
-        <div id="cardEstante" style="background: rgba(25, 25, 28, 0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(212, 175, 55, 0.35); padding: 15px 18px; border-radius: 12px; width: 280px; text-align: left; cursor: pointer; transition: transform 0.2s ease, border-color 0.2s ease;">
-            <h3 style="color: #d4af37; font-size: 16px; margin-bottom: 6px; font-family: 'Cormorant Garamond', serif;">📚 A Estante</h3>
-            <p style="color: #ccc; font-size: 12px; line-height: 1.4; margin: 0; font-family: 'Inter', sans-serif;">Percorra os livros e descubra os versos guardados.</p>
+  <!-- Modal de Ajustes Mobile (Apple Sheet) -->
+  <div class="modal-overlay" id="modal-ajustes-mobile">
+    <div class="modal-card">
+      <button class="modal-fechar" aria-label="Fechar">&times;</button>
+      <h3 class="modal-titulo">Ajustes & Personalização</h3>
+      <div class="modal-corpo">
+        <p style="font-size: 13px; color: var(--cor-texto-fraco); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">Tema de Cores</p>
+        <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px;">
+          <button class="btn-secundario" data-tema="noite" style="justify-content: flex-start;">❧ Noite de Veludo</button>
+          <button class="btn-secundario" data-tema="livro" style="justify-content: flex-start;">❧ Papel Envelhecido</button>
+          <button class="btn-secundario" data-tema="floresta" style="justify-content: flex-start;">❧ Floresta Silenciosa</button>
+          <button class="btn-secundario" data-tema="crepusculo" style="justify-content: flex-start;">❧ Crepúsculo Vinho</button>
+          <button class="btn-secundario" data-tema="azul" style="justify-content: flex-start;">❧ Azul Marinho Real</button>
+          <button class="btn-secundario" data-tema="infinito" style="justify-content: flex-start;">✦ Caos Infinito</button>
         </div>
 
-        <div id="cardManuscritos" style="background: rgba(25, 25, 28, 0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(212, 175, 55, 0.35); padding: 15px 18px; border-radius: 12px; width: 280px; text-align: left; cursor: pointer; transition: transform 0.2s ease, border-color 0.2s ease;">
-            <h3 style="color: #d4af37; font-size: 16px; margin-bottom: 6px; font-family: 'Cormorant Garamond', serif;">✍️ Últimos Manuscritos</h3>
-            <p style="color: #ccc; font-size: 12px; line-height: 1.4; margin: 0; font-family: 'Inter', sans-serif;">Leia as poesias mais recentes do autor.</p>
+        <p style="font-size: 13px; color: var(--cor-texto-fraco); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">Acessibilidade</p>
+        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+          <button class="btn-secundario" data-acao="fonte" style="flex: 1;">Aumentar Fonte (A+)</button>
+          <button class="btn-secundario" data-acao="fonte-menos" style="flex: 1;">Diminuir (A-)</button>
         </div>
 
-        <div id="cardImersivo" style="background: rgba(25, 25, 28, 0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(212, 175, 55, 0.35); padding: 15px 18px; border-radius: 12px; width: 280px; text-align: left; cursor: pointer; transition: transform 0.2s ease, border-color 0.2s ease;">
-            <h3 style="color: #d4af37; font-size: 16px; margin-bottom: 6px; font-family: 'Cormorant Garamond', serif;">🕯️ Modo Imersivo</h3>
-            <p style="color: #ccc; font-size: 12px; line-height: 1.4; margin: 0; font-family: 'Inter', sans-serif;">Ative a leitura silenciosa e profunda.</p>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button class="btn-secundario" data-acao="autor" style="text-align: center;">Sobre o Autor</button>
+          <button class="btn-secundario" data-acao="manifesto" style="text-align: center;">Manifesto</button>
         </div>
-
+      </div>
     </div>
-</div>
+  </div>
 
-<div class="tela-biblioteca" id="tela-biblioteca">
-  <header class="biblioteca-header" style="text-align: center; margin-bottom: 30px;">
-    <h2 style="font-family: 'Cormorant Garamond', serif; color: #d4af37; font-size: 28px;">Estante Poética</h2>
-    <p style="color: #888; font-size: 14px;">Seus livros e manuscritos salvos.</p>
-  </header>
-  
-  <div class="estante" id="estante" style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;"></div>
-</div>
-
-<div class="app escondido" id="tela-livro">
-  <main class="editor">
-    
-  </main>
-</div>
-
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const gaveta = document.getElementById("menuGaveta");
-        const overlay = document.getElementById("menuOverlay");
-        const btnAbrir = document.getElementById("btnMenu");
-        const btnFechar = document.getElementById("btnFecharMenu");
-
-        const telaInicio = document.getElementById("tela-inicio");
-        const telaBiblioteca = document.getElementById("tela-biblioteca");
-        const telaLivro = document.getElementById("tela-livro");
-
-        function abrirMenu(e) {
-            if (e) e.preventDefault();
-            if (gaveta) gaveta.classList.add("ativo");
-            if (overlay) overlay.classList.add("ativo");
-            if (btnAbrir) {
-                btnAbrir.style.opacity = "0";
-                btnAbrir.style.visibility = "hidden";
-            }
-        }
-
-        function fecharMenu(e) {
-            if (e) e.preventDefault();
-            if (gaveta) gaveta.classList.remove("ativo");
-            if (overlay) overlay.classList.remove("ativo");
-            if (btnAbrir) {
-                btnAbrir.style.opacity = "1";
-                btnAbrir.style.visibility = "visible";
-            }
-        }
-
-        if (btnAbrir) btnAbrir.addEventListener("click", abrirMenu);
-        if (btnFechar) btnFechar.addEventListener("click", fecharMenu);
-        if (overlay) overlay.addEventListener("click", fecharMenu);
-
-        const btnToggleTemas = document.getElementById("btnToggleTemas");
-        const submenuTemas = document.getElementById("submenuTemas");
-        const setaTema = document.getElementById("setaTema");
-
-        if (btnToggleTemas) {
-            btnToggleTemas.addEventListener("click", () => {
-                submenuTemas.classList.toggle("ativo");
-                setaTema.style.transform = submenuTemas.classList.contains("ativo") ? "rotate(180deg)" : "rotate(0deg)";
-            });
-        }
-
-        const btnToggleEstante = document.getElementById("btnToggleEstante");
-        const submenuEstante = document.getElementById("submenuEstante");
-        const setaEstante = document.getElementById("setaEstante");
-
-        if (btnToggleEstante) {
-            btnToggleEstante.addEventListener("click", () => {
-                submenuEstante.classList.toggle("ativo");
-                setaEstante.style.transform = submenuEstante.classList.contains("ativo") ? "rotate(180deg)" : "rotate(0deg)";
-            });
-        }
-
-        document.querySelectorAll('[data-acao]').forEach(item => {
-            item.addEventListener('click', () => {
-                const acao = item.getAttribute('data-acao');
-                if (!acao) return;
-                fecharMenu();
-                
-                if (acao === 'atmosfera') {
-                    window.location.href = 'atmosfera.html';
-                } else if (acao === 'inicio') {
-                    if (telaLivro) telaLivro.classList.add('escondido');
-                    if (telaBiblioteca) telaBiblioteca.style.display = 'none';
-                    if (telaInicio) telaInicio.style.display = 'flex';
-                } else if (acao === 'biblioteca' || acao === 'favoritos') {
-                    if (telaInicio) telaInicio.style.display = 'none';
-                    if (telaLivro) telaLivro.classList.add('escondido');
-                    if (telaBiblioteca) telaBiblioteca.style.display = 'block';
-                }
-            });
-        });
-    });
-</script>
-<script type="module" src="script.js"></script>
+  <!-- Scripts padrão (compatíveis com file:/// e HTTP) -->
+  <script src="./js/icons.js"></script>
+  <script src="./js/theme.js"></script>
+  <script src="./js/navigation.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

@@ -1,0 +1,154 @@
+/* ==========================================================================
+   PoemCenter — Sistema de Temas e Cores
+   ========================================================================== */
+
+:root {
+  /* Tema Padrão: Noite de Veludo */
+  --cor-fundo-app: #120f14;
+  --cor-fundo-sidebar: #17131b;
+  --cor-fundo-editor: #1c1722;
+  --cor-card-bg: rgba(26, 22, 30, 0.85);
+  --cor-card-hover: rgba(36, 30, 42, 0.95);
+
+  --cor-texto: #f0e8dc;
+  --cor-texto-suave: #b5a898;
+  --cor-texto-fraco: #7a6e60;
+
+  --cor-acento: #c9a227;
+  --cor-acento-forte: #e3c778;
+  --cor-acento-hover: #f0d892;
+
+  --cor-vinho: #8c3b4b;
+  --cor-vinho-forte: #a8495c;
+  --cor-linha: rgba(201, 162, 39, 0.18);
+  --cor-linha-forte: rgba(201, 162, 39, 0.35);
+  --cor-perigo: #c45555;
+  --cor-perigo-hover: #db6565;
+
+  /* Fontes */
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-corpo: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+
+  /* Efeitos e Geometria */
+  --raio-suave: 8px;
+  --raio-card: 12px;
+  --sombra-card: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --sombra-glow: 0 0 20px rgba(201, 162, 39, 0.15);
+  --transicao-rapida: 0.2s ease;
+  --transicao-media: 0.35s ease;
+}
+
+/* 1. Tema Papel Envelhecido */
+body.tema-livro {
+  --cor-fundo-app: #f4edd9;
+  --cor-fundo-sidebar: #ece3cb;
+  --cor-fundo-editor: #faf5e8;
+  --cor-card-bg: rgba(245, 237, 219, 0.95);
+  --cor-card-hover: rgba(255, 250, 240, 1);
+  --cor-texto: #2e261f;
+  --cor-texto-suave: #5e5246;
+  --cor-texto-fraco: #8c7d6e;
+  --cor-acento: #8c5d26;
+  --cor-acento-forte: #a46f32;
+  --cor-linha: rgba(140, 93, 38, 0.22);
+  --cor-linha-forte: rgba(140, 93, 38, 0.45);
+  --sombra-card: 0 8px 24px rgba(60, 40, 20, 0.12);
+  --sombra-glow: 0 0 20px rgba(140, 93, 38, 0.15);
+}
+
+/* 2. Tema Floresta Silenciosa */
+body.tema-floresta {
+  --cor-fundo-app: #0e1713;
+  --cor-fundo-sidebar: #131f1a;
+  --cor-fundo-editor: #192721;
+  --cor-card-bg: rgba(19, 31, 26, 0.88);
+  --cor-card-hover: rgba(26, 42, 35, 0.95);
+  --cor-texto: #e4efe7;
+  --cor-texto-suave: #96b3a3;
+  --cor-texto-fraco: #5d7a6b;
+  --cor-acento: #5da07d;
+  --cor-acento-forte: #7bc49e;
+  --cor-linha: rgba(93, 160, 125, 0.22);
+  --cor-linha-forte: rgba(93, 160, 125, 0.4);
+}
+
+/* 3. Tema Névoa da Manhã */
+body.tema-nevoa {
+  --cor-fundo-app: #15181b;
+  --cor-fundo-sidebar: #1b1f24;
+  --cor-fundo-editor: #22272d;
+  --cor-card-bg: rgba(27, 31, 36, 0.88);
+  --cor-card-hover: rgba(36, 42, 49, 0.95);
+  --cor-texto: #e6ebf0;
+  --cor-texto-suave: #9ba7b4;
+  --cor-texto-fraco: #667280;
+  --cor-acento: #8ba3ba;
+  --cor-acento-forte: #b2c8de;
+  --cor-linha: rgba(139, 163, 186, 0.22);
+  --cor-linha-forte: rgba(139, 163, 186, 0.4);
+}
+
+/* 4. Tema Crepúsculo Vinho */
+body.tema-crepusculo {
+  --cor-fundo-app: #180f14;
+  --cor-fundo-sidebar: #22141c;
+  --cor-fundo-editor: #2a1a23;
+  --cor-card-bg: rgba(34, 20, 28, 0.88);
+  --cor-card-hover: rgba(46, 28, 38, 0.95);
+  --cor-texto: #f5e6ee;
+  --cor-texto-suave: #bda2b1;
+  --cor-texto-fraco: #806575;
+  --cor-acento: #ba5774;
+  --cor-acento-forte: #df7a96;
+  --cor-linha: rgba(186, 87, 116, 0.22);
+  --cor-linha-forte: rgba(186, 87, 116, 0.4);
+}
+
+/* 5. Tema Azul Marinho Real */
+body.tema-azul {
+  --cor-fundo-app: #0d131f;
+  --cor-fundo-sidebar: #121a2a;
+  --cor-fundo-editor: #172237;
+  --cor-card-bg: rgba(18, 26, 42, 0.88);
+  --cor-card-hover: rgba(26, 37, 59, 0.95);
+  --cor-texto: #e2eaf5;
+  --cor-texto-suave: #92a4bd;
+  --cor-texto-fraco: #5d6f87;
+  --cor-acento: #548cc2;
+  --cor-acento-forte: #7bb1eb;
+  --cor-linha: rgba(84, 140, 194, 0.22);
+  --cor-linha-forte: rgba(84, 140, 194, 0.4);
+}
+
+/* 6. Tema Deserto de Cobre */
+body.tema-cobre {
+  --cor-fundo-app: #18110c;
+  --cor-fundo-sidebar: #221711;
+  --cor-fundo-editor: #2c1e16;
+  --cor-card-bg: rgba(34, 23, 17, 0.88);
+  --cor-card-hover: rgba(48, 33, 25, 0.95);
+  --cor-texto: #f7ede6;
+  --cor-texto-suave: #baa597;
+  --cor-texto-fraco: #806c5e;
+  --cor-acento: #c77b4a;
+  --cor-acento-forte: #e59d6e;
+  --cor-linha: rgba(199, 123, 74, 0.22);
+  --cor-linha-forte: rgba(199, 123, 74, 0.4);
+}
+
+/* 7. Tema Sol da Meia-Noite */
+body.tema-sol {
+  --cor-fundo-app: #19140a;
+  --cor-fundo-sidebar: #231c0e;
+  --cor-fundo-editor: #2e2413;
+  --cor-card-bg: rgba(35, 28, 14, 0.88);
+  --cor-card-hover: rgba(50, 40, 20, 0.95);
+  --cor-texto: #f7f1e4;
+  --cor-texto-suave: #baa988;
+  --cor-texto-fraco: #7e6f4f;
+  --cor-acento: #dca738;
+  --cor-acento-forte: #f5ca68;
+  --cor-linha: rgba(220, 167, 56, 0.22);
+  --cor-linha-forte: rgba(220, 167, 56, 0.4);
+}
